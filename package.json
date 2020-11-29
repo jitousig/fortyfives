@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "parcel index.html --open"
+  },
+  "browserslist": "> 0.4% and not ie 11",
+  "dependencies": {
+    "boardgame.io": "^0.42.0"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}
