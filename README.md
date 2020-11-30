@@ -1,6 +1,6 @@
 ### TO DO
 
-- [ ] Bidding
+- [x] Bidding
 - [ ] Scoring
 - [ ] 30 for 60
 - [ ] No pegging past 100
