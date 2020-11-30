@@ -103,6 +103,8 @@ const generateDeck = () => {
 };
 
 function Bid(G, ctx,amount) {
+  const validBid = MoveValidate.Bid(G, ctx, amount)
+  if (!(validBid.valid)) {return Error(validBid.message)}
   G.bidding[ctx.currentPlayer] = amount;
   console.log(isPass(G.bidding[0]) + 
         isPass(G.bidding[1]) + 

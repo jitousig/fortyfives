@@ -17425,6 +17425,13 @@ const MoveValidate = {
     return result(false, "Too many cards in your hand for doing that move!");
     }*/
   },
+  Bid: (G, ctx, amount) => {
+    if (![20, 25, 30, "pass", "hold"].includes(amount)) {
+      return result(false, "That is not a valid bid");
+    }
+
+    return result(true, "ok");
+  },
   takeOne: (G, ctx, id) => {
     if (typeof id !== "number") {
       return result(false, "Select 1 and only 1 card for takeOne");
@@ -17644,6 +17651,12 @@ const generateDeck = () => {
 };
 
 function Bid(G, ctx, amount) {
+  const validBid = _moveValidation.MoveValidate.Bid(G, ctx, amount);
+
+  if (!validBid.valid) {
+    return Error(validBid.message);
+  }
+
   G.bidding[ctx.currentPlayer] = amount;
   console.log(isPass(G.bidding[0]) + isPass(G.bidding[1]) + isPass(G.bidding[2]) + isPass(G.bidding[3]) === 3);
   ctx.events.endTurn();
