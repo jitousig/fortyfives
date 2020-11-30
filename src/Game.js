@@ -101,7 +101,7 @@ function Bid(G, ctx,amount) {
 function playCard(G, ctx, id) {
       const istrump = (card) => {
   if (card.suit === G.hand.trumpsuit || card.id === "AH") {
-    return true 
+    return true
   } else {return false}
 }
 
@@ -123,25 +123,25 @@ function playCard(G, ctx, id) {
       if (card1.ranknontrump < card2.ranknontrump) {
         return false
       } else { return true}
-      
-      
+
+
     }
     else if (card1.suit != G.trick.suitled && card2.suit != G.trick.suitled) {
       return "incomparable"
     }
   }}
-      
-      
+
+
               //put the card into play area
               //remove the card from your hand
               const validMove = MoveValidate.playCard(G, ctx, id);
             //  console.log(validMove.valid)
               if (!(validMove.valid)) {return Error(validMove.message)}
         /*      //return Error(validMove.message) */
-              
+
               const p = ctx.currentPlayer;
               let cards = G.players[p].cards.slice();
-              let cardToPlay = cards.filter((card) => card.id === id)[0]; 
+              let cardToPlay = cards.filter((card) => card.id === id)[0];
               cards = cards.filter((card) => card.id !== cardToPlay.id);
               G.players[p].cards = cards;
               G.table[p] = cardToPlay;
@@ -161,7 +161,7 @@ function playCard(G, ctx, id) {
                 G.trick.trumpled = istrump(cardToPlay)
                 if (G.trick.trumpled) {G.trick.ranktrumpled = cardToPlay.ranktrump}
               }
-              G.trick.cards_played++; 
+              G.trick.cards_played++;
               if (G.trick.cards_played === 1) {
                 G.trick.bestcardthistrick = cardToPlay;
                 G.trick.bestplayerthistrick = p;
@@ -171,13 +171,13 @@ function playCard(G, ctx, id) {
                   G.trick.bestcardthistrick = cardToPlay;
                 G.trick.bestplayerthistrick = p;
                 }
-              }; 
+              };
               if (G.trick.cards_played === 4 ) {
 		          if (G.trick.bestplayerthistrick === '0' ||
 		          G.trick.bestplayerthistrick === '2') {
 		            G.trick.winningpartnership = 0;} else {
 		              G.trick.winningpartnership = 1;
-		            } 
+		            }
 
              G.hand.score[G.trick.winningpartnership] += 5;
              if (G.hand.score[0] + G.hand.score[1] === 25) {
@@ -185,14 +185,14 @@ function playCard(G, ctx, id) {
 		          G.hand.highest_trump_yet_player === '2') {
 		            G.hand.score[0] += 5} else {
 		              G.hand.score[1] += 5;
-		            } 
+		            }
              }
               G.table = {
           0: [],
           1: [],
           2: [],
           3: []
-      }; 
+      };
       let nexttolead = G.trick.bestplayerthistrick
       G.trick = {
           cards_played: 0,
@@ -203,10 +203,10 @@ function playCard(G, ctx, id) {
           trumpled: [],
           ranktrumpled: []
           };
-          
-          ctx.events.endTurn({ next: nexttolead });  
-             }; 
-             ctx.events.endTurn(); 
+
+          ctx.events.endTurn({ next: nexttolead });
+             };
+             ctx.events.endTurn();
               }
 
 function declareSuit(G, ctx, suit) {
@@ -218,7 +218,7 @@ function discard(G, ctx, cardsToDiscard){
   const p = ctx.currentPlayer
   const l = cardsToDiscard.length
   let cards = G.players[p].cards.slice();
-  let cardsToKeep = cards.filter((card) => !cardsToDiscard.includes(card.id)); 
+  let cardsToKeep = cards.filter((card) => !cardsToDiscard.includes(card.id));
   G.players[p].cards = cardsToKeep;
   for (let i = 0; i < l; i++) {
       G.players[p].cards.push(G.deck.pop());
@@ -232,10 +232,10 @@ function discard(G, ctx, cardsToDiscard){
 G.trick.northsouthscore = 5;
 // add 5 points to the winning team score
 // identify winning player
-// identify highest trump if played 
+// identify highest trump if played
 }; */
 
- 
+
 const std_45s_deck = [
   { id: 'AH', ranktrump: 3, suit: "Hearts"},
   { id: 'KH', ranktrump: 4, ranknontrump: 1, suit: "Hearts"},
@@ -289,7 +289,7 @@ const std_45s_deck = [
   { id: '4C', ranktrump: 9, ranknontrump: 7, suit: "Clubs"},
   { id: '3C', ranktrump: 8, ranknontrump: 6, suit: "Clubs"},
   { id: '2C', ranktrump: 7, ranknontrump: 5, suit: "Clubs"}]
-  
+
 
 //const trumpsuit = "Clubs"
 
@@ -313,7 +313,7 @@ const compare = (card1, card2) => {
       if (card1.ranknontrump < card2.ranknontrump) {
         return card1
       } else { return card2}
-      
+
     }
     else if (card1.suit != suitled && card2.suit != suitled) {
       return "incomparable"
@@ -338,7 +338,7 @@ const nextCardBetter = (card1, card2) => {
       if (card1.ranknontrump < card2.ranknontrump) {
         return false
       } else { return true}
-      
+
     }
     else if (card1.suit != G.trick.suitled && card2.suit != G.trick.suitled) {
       return "incomparable"
@@ -358,7 +358,7 @@ export const TicTacToe = {
         0: { trade_tokens: [], cards: [], T3: 0, T4: 0, T5: 0 },
         1: { trade_tokens: [], cards: [], T3: 0, T4: 0, T5: 0 },
         2: { cards: [] },
-        3: { cards: [] }	
+        3: { cards: [] }
       },
       deck: deck,
       table: {
@@ -386,10 +386,10 @@ export const TicTacToe = {
           highest_trump_yet: [],
           highest_trump_yet_player: []
       }
-    
+
     };
-    
-    start.deck = std_45s_deck
+
+    start.deck = shuffleDeck(std_45s_deck)
     // Deal 5 cards in alternating order to each player
     for (let i = 0; i < 5; i++) {
       start.players[0].cards.push(start.deck.pop());
@@ -403,8 +403,8 @@ export const TicTacToe = {
     return start;
   },
   //playerView: PlayerView.STRIP_SECRETS,
-  
-  
+
+
   phases: {
     bid: {
       moves: { Bid },
@@ -437,7 +437,7 @@ export const TicTacToe = {
      // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
       moves: { discard },
       next: 'play',
-     /* turn: { 
+     /* turn: {
         order: {
     // Get the initial value of playOrderPos.
     // This is called at the beginning of the phase.
@@ -447,7 +447,7 @@ export const TicTacToe = {
     // This is called at the end of each turn.
     // The phase ends if this returns undefined.
     next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-      
+
     }
       } */
       turn: { order: {
@@ -459,12 +459,12 @@ export const TicTacToe = {
           }}
         }
    // order: TurnOrder.ONCE,
-    
+
   }
-  
-  
-    } 
-      
+
+
+    }
+
       ,
   play: {
     moves: { playCard },
@@ -488,7 +488,7 @@ export const TicTacToe = {
 }
   //  ,start: true
   }
-    
+
   },
 
   turn: {
