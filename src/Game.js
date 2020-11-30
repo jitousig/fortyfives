@@ -23,6 +23,14 @@ const Error = (str) => {
   console.log("ERROR: " + str);
 };
 
+const isPass = (bid) => {
+  if (bid === "pass") {
+    return 1
+  } else {
+    return 0
+  }
+}
+
 const shuffleDeck = (deck) => {
   for (var i = deck.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
@@ -95,7 +103,12 @@ const generateDeck = () => {
 };
 
 function Bid(G, ctx,amount) {
-  G.bidding[ctx.currentPlayer] = amount
+  G.bidding[ctx.currentPlayer] = amount;
+  console.log(isPass(G.bidding[0]) + 
+        isPass(G.bidding[1]) + 
+        isPass(G.bidding[2]) + 
+        isPass(G.bidding[3]) === 3)
+  ctx.events.endTurn()
 }
 
 function playCard(G, ctx, id) {
@@ -367,6 +380,12 @@ export const TicTacToe = {
           2: [],
           3: []
       },
+      bidding: {
+        0: [],
+        1: [],
+        2: [],
+        3: []
+      },
       trick: {
           cards_played: 0,
           bestcardthistrick: [],
@@ -408,8 +427,37 @@ export const TicTacToe = {
   phases: {
     bid: {
       moves: { Bid },
+      endIf: G => (
+        isPass(G.bidding[0]) + 
+        isPass(G.bidding[1]) + 
+        isPass(G.bidding[2]) + 
+        isPass(G.bidding[3]) === 3),
       start: true,
-      next: 'declare'
+      next: 'declare',
+      turn: {
+  order: {
+    // Get the initial value of playOrderPos.
+    // This is called at the beginning of the phase.
+    first: (G, ctx) => G.under_the_gun,
+
+    // Get the next value of playOrderPos.
+    // This is called at the end of each turn.
+    // The phase ends if this returns undefined.
+    next: (G, ctx) => {
+      for (var i = 1; i < 4 ; i++) {
+    let p = (ctx.playOrderPos + i) % ctx.numPlayers
+    if (G.bidding[p] != "pass") {
+      return (ctx.playOrderPos + i) % ctx.numPlayers}
+      }}
+    
+    
+
+    // OPTIONAL:
+    // Override the initial value of playOrder.
+    // This is called at the beginning of the game / phase.
+   // playOrder: (G, ctx) => [...],
+  }
+}
     },
     declare:{
       onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
