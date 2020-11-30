@@ -7,7 +7,7 @@
 - [ ] Automatic loss if you go 25 without the 5
 - [ ] Move validation
 - [ ] Hide hand secrets
-- [ ] Shuffle
+- [ ] Validate shuffling
 - [ ] UI
 - [ ] Multiplayer clients
 - [ ] Fish suit names
