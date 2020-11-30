@@ -18213,7 +18213,7 @@ const TicTacToe = {
           2: [],
           3: []
         },
-        declarer: 2,
+        declarer: [],
         score: {
           0: 0,
           //northsouth
@@ -18273,12 +18273,13 @@ const TicTacToe = {
           // playOrder: (G, ctx) => [...],
 
         }
+      },
+      onEnd: (G, ctx) => {
+        G.hand.declarer = G.hand.highest_bidder_yet;
       }
     },
     declare: {
-      onBegin: (G, ctx) => {
-        ctx.playOrderPos = G.under_the_gun;
-      },
+      //   onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
       moves: {
         declareSuit
       },
@@ -18287,7 +18288,7 @@ const TicTacToe = {
         order: {
           // Get the initial value of playOrderPos.
           // This is called at the beginning of the phase.
-          first: (G, ctx) => G.hand.declarer // Get the next value of playOrderPos.
+          first: (G, ctx) => parseInt(G.hand.declarer) // Get the next value of playOrderPos.
           // This is called at the end of each turn.
           // The phase ends if this returns undefined.
           // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
