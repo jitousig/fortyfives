@@ -83,10 +83,16 @@ export const MoveValidate = {
     }*/
   },
   Bid: (G, ctx, amount) => {
+  const p = ctx.currentPlayer;  
   if (![20,25,30,"pass","hold"].includes(amount)) {
     return result(false, "That is not a valid bid");
   }
-  return result(true, "ok")
+  if (amount === "hold" && p != G.dealer ) {
+    return result(false, "Only the dealer can hold")
+  }
+  if (amount != "hold" && amount <= G.hand.highest_bid_yet) {
+    return result(false, "You have to bid more than the previous player")}
+    return result(true, "ok")
   },
   takeOne: (G, ctx, id) => {
     if (typeof id !== "number") {

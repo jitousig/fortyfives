@@ -17426,8 +17426,18 @@ const MoveValidate = {
     }*/
   },
   Bid: (G, ctx, amount) => {
+    const p = ctx.currentPlayer;
+
     if (![20, 25, 30, "pass", "hold"].includes(amount)) {
       return result(false, "That is not a valid bid");
+    }
+
+    if (amount === "hold" && p != G.dealer) {
+      return result(false, "Only the dealer can hold");
+    }
+
+    if (amount != "hold" && amount <= G.hand.highest_bid_yet) {
+      return result(false, "You have to bid more than the previous player");
     }
 
     return result(true, "ok");
@@ -17657,8 +17667,18 @@ function Bid(G, ctx, amount) {
     return Error(validBid.message);
   }
 
-  G.bidding[ctx.currentPlayer] = amount;
-  console.log(isPass(G.bidding[0]) + isPass(G.bidding[1]) + isPass(G.bidding[2]) + isPass(G.bidding[3]) === 3);
+  G.hand.bidding[ctx.currentPlayer] = amount;
+
+  if (amount != "pass") {
+    G.hand.highest_bid_yet = amount;
+
+    if (amount != "hold") {
+      G.hand.highest_bid_value_yet = amount;
+    }
+
+    G.hand.highest_bidder_yet = ctx.currentPlayer;
+  }
+
   ctx.events.endTurn();
 }
 
@@ -18143,6 +18163,7 @@ const TicTacToe = {
   setup: () => {
     const deck = generateDeck();
     var start = {
+      dealer: 1,
       under_the_gun: 2,
       board: [],
       chat: [],
@@ -18176,12 +18197,6 @@ const TicTacToe = {
         2: [],
         3: []
       },
-      bidding: {
-        0: [],
-        1: [],
-        2: [],
-        3: []
-      },
       trick: {
         cards_played: 0,
         bestcardthistrick: [],
@@ -18192,6 +18207,12 @@ const TicTacToe = {
         ranktrumpled: []
       },
       hand: {
+        bidding: {
+          0: [],
+          1: [],
+          2: [],
+          3: []
+        },
         declarer: 2,
         score: {
           0: 0,
@@ -18199,6 +18220,9 @@ const TicTacToe = {
           1: 0 //eastwest
 
         },
+        highest_bid_yet: [],
+        highest_bid_value_yet: [],
+        highest_bidder_yet: [],
         trumpsuit: [],
         highest_trump_yet: [],
         highest_trump_yet_player: []
@@ -18224,7 +18248,7 @@ const TicTacToe = {
       moves: {
         Bid
       },
-      endIf: G => isPass(G.bidding[0]) + isPass(G.bidding[1]) + isPass(G.bidding[2]) + isPass(G.bidding[3]) === 3,
+      endIf: G => isPass(G.hand.bidding[0]) + isPass(G.hand.bidding[1]) + isPass(G.hand.bidding[2]) + isPass(G.hand.bidding[3]) === 3,
       start: true,
       next: 'declare',
       turn: {
@@ -18239,7 +18263,7 @@ const TicTacToe = {
             for (var i = 1; i < 4; i++) {
               let p = (ctx.playOrderPos + i) % ctx.numPlayers;
 
-              if (G.bidding[p] != "pass") {
+              if (G.hand.bidding[p] != "pass") {
                 return (ctx.playOrderPos + i) % ctx.numPlayers;
               }
             }
