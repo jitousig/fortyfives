@@ -18219,7 +18219,7 @@ const TicTacToe = {
           2: [],
           3: []
         },
-        declarer: [],
+        declarer: "0",
         declaringpartnership: [],
         defendingpartnership: [],
         score: {
@@ -18257,7 +18257,7 @@ const TicTacToe = {
         Bid
       },
       endIf: G => isPass(G.hand.bidding[0]) + isPass(G.hand.bidding[1]) + isPass(G.hand.bidding[2]) + isPass(G.hand.bidding[3]) === 3,
-      start: true,
+      //    start: true,
       next: 'declare',
       turn: {
         order: {
@@ -18340,6 +18340,7 @@ const TicTacToe = {
       }
     },
     play: {
+      start: true,
       moves: {
         playCard
       },
@@ -18432,11 +18433,18 @@ class TicTacToeClient {
       }
 
       hand.push("<tr>".concat(cards.join(''), "</tr>"));
+    }
+
+    const board = [];
+
+    for (let i = 0; i < 4; i++) {
+      const playerid = i;
+      board.push("<td class=\"board\" data-cardid=\"\" data-playerid=\"".concat(playerid, "\"></td>"));
     } // Add the HTML to our app <div>.
     // We’ll use the empty <p> to display the game winner later.
 
 
-    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <p class=\"winner\"></p>\n      ");
+    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table}\n        <p class=\"winner\"> hello </p>\n      ");
   }
 
   attachListeners() {
@@ -18461,7 +18469,14 @@ class TicTacToeClient {
     cards.forEach(card => {
       const cellId = parseInt(card.dataset.cardid);
       const playerId = parseInt(card.dataset.playerid);
-      const cellValue = state.G.players[playerId].cards[cellId].id;
+      console.log(state.G.players[playerId].cards.length); //  console.log(cellId)
+
+      let cellValue = "";
+
+      if (cellId <= state.G.players[playerId].cards.length - 1) {
+        cellValue = state.G.players[playerId].cards[cellId].id;
+      }
+
       card.textContent = cellValue !== null ? cellValue : '';
     }); // Get the gameover message element.
     //const messageEl = this.rootElement.querySelector('.winner');
@@ -18474,6 +18489,17 @@ class TicTacToeClient {
     //} else {
     //  messageEl.textContent = '';
     //}
+
+    const boards = this.rootElement.querySelectorAll('.board'); // Update cells to display the values in game state.
+
+    boards.forEach(board => {
+      const playerId = parseInt(board.dataset.playerid);
+      console.log(playerId);
+      const cellValue = state.G.table[playerId].id;
+      console.log(cellValue); //     board.textContent = playerId !== null ? playerId : '';
+
+      board.textContent = cellValue !== null ? cellValue : '';
+    });
   }
 
 }

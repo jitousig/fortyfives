@@ -24,12 +24,18 @@ numPlayers: 4 });
             }
             hand.push(`<tr>${cards.join('')}</tr>`);
           }
+          const board = []
+          for (let i=0; i < 4; i++) {
+            const playerid = i
+            board.push(`<td class="board" data-cardid="" data-playerid="${playerid}"></td>`)
+          }
 
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
         <table>${hand.join('')}</table>
-        <p class="winner"></p>
+        <table>${board.join('')}</table}
+        <p class="winner"> hello </p>
       `;
       }
 
@@ -54,7 +60,12 @@ numPlayers: 4 });
       cards.forEach(card => {
         const cellId = parseInt(card.dataset.cardid);
         const playerId = parseInt(card.dataset.playerid);
-        const cellValue = state.G.players[playerId].cards[cellId].id;
+        console.log(state.G.players[playerId].cards.length)
+      //  console.log(cellId)
+      let cellValue = ""
+        if (cellId <= state.G.players[playerId].cards.length -1){
+          cellValue = state.G.players[playerId].cards[cellId].id;
+        }
         card.textContent = cellValue !== null ? cellValue : '';
       });
       // Get the gameover message element.
@@ -68,6 +79,17 @@ numPlayers: 4 });
       //} else {
       //  messageEl.textContent = '';
       //}
+      const boards = this.rootElement.querySelectorAll('.board');
+      // Update cells to display the values in game state.
+      boards.forEach(board => {
+        const playerId = parseInt(board.dataset.playerid);
+        console.log(playerId)
+        const cellValue = state.G.table[playerId].id;
+        console.log(cellValue)
+   //     board.textContent = playerId !== null ? playerId : '';
+        
+        board.textContent = cellValue !== null ? cellValue : '';
+      });
     }
 }
 
