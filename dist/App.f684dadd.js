@@ -17630,35 +17630,31 @@ const getWinner = G => {
     }
   };
 };
-
-const generateDeck = () => {
+/*const generateDeck = () => {  //This is old code from the camel game.
   let deck = [];
   let id = 0;
-  Object.keys(DECK_CONTENTS).forEach(res => {
+  Object.keys(DECK_CONTENTS).forEach((res) => {
     let count = DECK_CONTENTS[res];
-
-    if (res === _constants.RESOURCES.camel) {
+    if (res === RESOURCES.camel) {
       count -= 3;
     }
-
     for (let i = 0; i < count; i++) {
       deck.push({
         id: id++,
-        type: res
+        type: res,
       });
     }
   });
   deck = shuffleDeck(deck);
-
   for (let i = 0; i < 3; i++) {
     deck.push({
       id: id++,
-      type: _constants.RESOURCES.camel
+      type: RESOURCES.camel,
     });
   }
-
   return deck;
-};
+}; */
+
 
 function Bid(G, ctx, amount) {
   const validBid = _moveValidation.MoveValidate.Bid(G, ctx, amount);
@@ -18161,7 +18157,7 @@ const nextCardBetter = (card1, card2) => {
 const TicTacToe = {
   name: _config.GAME_NAME,
   setup: () => {
-    const deck = generateDeck();
+    const deck = std_45s_deck;
     var start = {
       dealer: 1,
       under_the_gun: 2,
@@ -18267,11 +18263,7 @@ const TicTacToe = {
                 return (ctx.playOrderPos + i) % ctx.numPlayers;
               }
             }
-          } // OPTIONAL:
-          // Override the initial value of playOrder.
-          // This is called at the beginning of the game / phase.
-          // playOrder: (G, ctx) => [...],
-
+          }
         }
       },
       onEnd: (G, ctx) => {
@@ -18292,10 +18284,6 @@ const TicTacToe = {
           // This is called at the end of each turn.
           // The phase ends if this returns undefined.
           // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-          // OPTIONAL:
-          // Override the initial value of playOrder.
-          // This is called at the beginning of the game / phase.
-          // playOrder: (G, ctx) => [...],
 
         }
       }
@@ -18312,11 +18300,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-      // Get the next value of playOrderPos.
+        // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-      }
+        }
        } */
       turn: {
         order: {
@@ -18328,8 +18316,7 @@ const TicTacToe = {
               ctx.events.endPhase();
             }
           }
-        } // order: TurnOrder.ONCE,
-
+        }
       }
     },
     play: {
@@ -18351,8 +18338,7 @@ const TicTacToe = {
           // playOrder: (G, ctx) => [...],
 
         }
-      } //  ,start: true
-
+      }
     }
   },
   turn: {
@@ -18491,7 +18477,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50045" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62322" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

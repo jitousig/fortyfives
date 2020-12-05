@@ -77,7 +77,7 @@ const getWinner = (G) => {
   }
   return { winner: winner, scores: { 0: p0Score, 1: p1Score } };
 };
-const generateDeck = () => {
+/*const generateDeck = () => {  //This is old code from the camel game.
   let deck = [];
   let id = 0;
   Object.keys(DECK_CONTENTS).forEach((res) => {
@@ -100,7 +100,7 @@ const generateDeck = () => {
     });
   }
   return deck;
-};
+}; */
 
 function Bid(G, ctx,amount) {
   const validBid = MoveValidate.Bid(G, ctx, amount)
@@ -365,7 +365,7 @@ const nextCardBetter = (card1, card2) => {
 export const TicTacToe = {
   name: GAME_NAME,
   setup: () => {
-    const deck = generateDeck();
+    const deck = std_45s_deck;
     var start = {
       dealer: 1,
       under_the_gun: 2,
@@ -430,8 +430,6 @@ export const TicTacToe = {
     return start;
   },
   //playerView: PlayerView.STRIP_SECRETS,
-
-
   phases: {
     bid: {
       moves: { Bid },
@@ -443,71 +441,61 @@ export const TicTacToe = {
       start: true,
       next: 'declare',
       turn: {
-  order: {
-    // Get the initial value of playOrderPos.
-    // This is called at the beginning of the phase.
-    first: (G, ctx) => G.under_the_gun,
-
-    // Get the next value of playOrderPos.
-    // This is called at the end of each turn.
-    // The phase ends if this returns undefined.
-    next: (G, ctx) => {
-      for (var i = 1; i < 4 ; i++) {
-    let p = (ctx.playOrderPos + i) % ctx.numPlayers
-    if (G.hand.bidding[p] != "pass") {
-      return (ctx.playOrderPos + i) % ctx.numPlayers}
-      }}
-    
-    
-
-    // OPTIONAL:
-    // Override the initial value of playOrder.
-    // This is called at the beginning of the game / phase.
-   // playOrder: (G, ctx) => [...],
-  }
-},
-onEnd: (G, ctx) => {G.hand.declarer = G.hand.highest_bidder_yet}
+        order: {
+          // Get the initial value of playOrderPos.
+          // This is called at the beginning of the phase.
+          first: (G, ctx) => G.under_the_gun,
+      
+          // Get the next value of playOrderPos.
+          // This is called at the end of each turn.
+          // The phase ends if this returns undefined.
+          next: (G, ctx) => {
+            for (var i = 1; i < 4 ; i++) {
+              let p = (ctx.playOrderPos + i) % ctx.numPlayers
+              if (G.hand.bidding[p] != "pass") {
+                return (ctx.playOrderPos + i) % ctx.numPlayers
+              }
+            }
+          }
+        }
+      },
+      onEnd: (G, ctx) => {G.hand.declarer = G.hand.highest_bidder_yet}
     },
     declare:{
    //   onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
       moves: { declareSuit },
       next: 'draw',
       turn: {
-  order: {
-    // Get the initial value of playOrderPos.
-    // This is called at the beginning of the phase.
-    first: (G, ctx) => parseInt(G.hand.declarer),
-
-    // Get the next value of playOrderPos.
-    // This is called at the end of each turn.
-    // The phase ends if this returns undefined.
-   // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-
-    // OPTIONAL:
-    // Override the initial value of playOrder.
-    // This is called at the beginning of the game / phase.
-   // playOrder: (G, ctx) => [...],
-  }
-}
+        order: {
+          // Get the initial value of playOrderPos.
+          // This is called at the beginning of the phase.
+          first: (G, ctx) => parseInt(G.hand.declarer),
+          // Get the next value of playOrderPos.
+          // This is called at the end of each turn.
+          // The phase ends if this returns undefined.
+         // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
+        }
+      }
     },
     draw: {
-     // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
+      // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
       moves: { discard },
       next: 'play',
-     /* turn: {
+       /* turn: {
+          order: {
+      // Get the initial value of playOrderPos.
+      // This is called at the beginning of the phase.
+      first: (G, ctx) => G.under_the_gun,
+  
+      // Get the next value of playOrderPos.
+      // This is called at the end of each turn.
+      // The phase ends if this returns undefined.
+      next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
+  
+      }
+        } */
+      turn: { 
         order: {
-    // Get the initial value of playOrderPos.
-    // This is called at the beginning of the phase.
-    first: (G, ctx) => G.under_the_gun,
-
-    // Get the next value of playOrderPos.
-    // This is called at the end of each turn.
-    // The phase ends if this returns undefined.
-    next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-
-    }
-      } */
-      turn: { order: {
         first: (G, ctx) => G.under_the_gun,
         next: (G, ctx) => {
           if ((ctx.playOrderPos + 1) % ctx.numPlayers != G.under_the_gun)
@@ -515,39 +503,28 @@ onEnd: (G, ctx) => {G.hand.declarer = G.hand.highest_bidder_yet}
             ctx.events.endPhase()
           }}
         }
-   // order: TurnOrder.ONCE,
-
-  }
-
-
+      }
+    },
+    play: {
+      moves: { playCard },
+      next: 'bid',
+      turn: {
+        order: {
+        // Get the initial value of playOrderPos.
+        // This is called at the beginning of the phase.
+        first: (G, ctx) => G.hand.declarer + 1,
+        // Get the next value of playOrderPos.
+        // This is called at the end of each turn.
+        // The phase ends if this returns undefined.
+        next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
+        // OPTIONAL:
+        // Override the initial value of playOrder.
+        // This is called at the beginning of the game / phase.
+        // playOrder: (G, ctx) => [...],
+        }
+      }
     }
-
-      ,
-  play: {
-    moves: { playCard },
-    next: 'bid',
-    turn: {
-  order: {
-    // Get the initial value of playOrderPos.
-    // This is called at the beginning of the phase.
-    first: (G, ctx) => G.hand.declarer + 1,
-
-    // Get the next value of playOrderPos.
-    // This is called at the end of each turn.
-    // The phase ends if this returns undefined.
-    next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
-
-    // OPTIONAL:
-    // Override the initial value of playOrder.
-    // This is called at the beginning of the game / phase.
-   // playOrder: (G, ctx) => [...],
-  }
-}
-  //  ,start: true
-  }
-
   },
-
   turn: {
     onEnd: (G, ctx) => {
       //Update states here like deck size
