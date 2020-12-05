@@ -17630,31 +17630,6 @@ const getWinner = G => {
     }
   };
 };
-/*const generateDeck = () => {  //This is old code from the camel game.
-  let deck = [];
-  let id = 0;
-  Object.keys(DECK_CONTENTS).forEach((res) => {
-    let count = DECK_CONTENTS[res];
-    if (res === RESOURCES.camel) {
-      count -= 3;
-    }
-    for (let i = 0; i < count; i++) {
-      deck.push({
-        id: id++,
-        type: res,
-      });
-    }
-  });
-  deck = shuffleDeck(deck);
-  for (let i = 0; i < 3; i++) {
-    deck.push({
-      id: id++,
-      type: RESOURCES.camel,
-    });
-  }
-  return deck;
-}; */
-
 
 function Bid(G, ctx, amount) {
   const validBid = _moveValidation.MoveValidate.Bid(G, ctx, amount);
@@ -17731,7 +17706,7 @@ function playCard(G, ctx, id) {
   let cardToPlay = cards.filter(card => card.id === id)[0];
   cards = cards.filter(card => card.id !== cardToPlay.id);
   G.players[p].cards = cards;
-  G.table[p] = cardToPlay;
+  G.table[p] = cardToPlay; //keep track of highest trump yet
 
   if (istrump(cardToPlay)) {
     if (G.hand.highest_trump_yet.length === 0) {
@@ -17743,7 +17718,8 @@ function playCard(G, ctx, id) {
         G.hand.highest_trump_yet_player = p;
       }
     }
-  }
+  } //keep track of suit led and rank if trump (for reneging)
+
 
   if (G.trick.cards_played === 0) {
     G.trick.suitled = cardToPlay.suit;
@@ -17754,7 +17730,7 @@ function playCard(G, ctx, id) {
     }
   }
 
-  G.trick.cards_played++;
+  G.trick.cards_played++; //track best card played
 
   if (G.trick.cards_played === 1) {
     G.trick.bestcardthistrick = cardToPlay;
@@ -17767,31 +17743,46 @@ function playCard(G, ctx, id) {
     }
   }
 
-  ;
+  ; //score the trick
 
   if (G.trick.cards_played === 4) {
+    //identify winning partnership
     if (G.trick.bestplayerthistrick === '0' || G.trick.bestplayerthistrick === '2') {
       G.trick.winningpartnership = 0;
     } else {
       G.trick.winningpartnership = 1;
     }
 
-    G.hand.score[G.trick.winningpartnership] += 5;
+    G.hand.score[G.trick.winningpartnership] += 5; //Check if this was the last trick of the hand 
 
     if (G.hand.score[0] + G.hand.score[1] === 25) {
+      //5 points for highest trump
       if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
         G.hand.score[0] += 5;
       } else {
         G.hand.score[1] += 5;
-      }
-    }
+      } //update the game score
+      //check if someone went 25 without the 5
+      //check if it was 30 for 60
+      //check if the declaring partnership didn't make their bid
+
+
+      if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
+        G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet;
+      } //check if the defending partnership had 100 points
+      //check if the game is over
+      //deal a new hand
+
+    } //clear the table for next trick
+
 
     G.table = {
       0: [],
       1: [],
       2: [],
       3: []
-    };
+    }; // set nexttolead before clearing trick state
+
     let nexttolead = G.trick.bestplayerthistrick;
     G.trick = {
       cards_played: 0,
@@ -17801,7 +17792,8 @@ function playCard(G, ctx, id) {
       suitled: [],
       trumpled: [],
       ranktrumpled: []
-    };
+    }; //go to next trick
+
     ctx.events.endTurn({
       next: nexttolead
     });
@@ -18096,35 +18088,33 @@ const std_45s_deck = [{
   ranktrump: 7,
   ranknontrump: 5,
   suit: "Clubs"
-}]; //const trumpsuit = "Clubs"
-
+}];
+/*
 const compare = (card1, card2) => {
-  if (istrump(card1) && !istrump(card2)) {
-    return card1;
+  if (istrump(card1) && !(istrump(card2))) {
+    return card1
   } else if (!istrump(card1) && istrump(card2)) {
-    return card2;
+    return card2
   } else if (istrump(card1) && istrump(card2)) {
     if (card1.ranktrump < card2.ranktrump) {
-      return card1;
-    } else {
-      return card2;
-    }
-  } else if (!istrump(card1) && !istrump(card2)) {
+      return card1
+    } else { return card2}
+  } else if (!istrump(card1) && !istrump(card2)){
     if (card1.suit === suitled && card2.suit != suitled) {
-      return card1;
+      return card1
     } else if (card1.suit != suitled && card2.suit === suitled) {
-      return card2;
+      return card2
     } else if (card1.suit === suitled && card2.suit === suitled) {
       if (card1.ranknontrump < card2.ranknontrump) {
-        return card1;
-      } else {
-        return card2;
-      }
-    } else if (card1.suit != suitled && card2.suit != suitled) {
-      return "incomparable";
+        return card1
+      } else { return card2}
+
+    }
+    else if (card1.suit != suitled && card2.suit != suitled) {
+      return "incomparable"
     }
   }
-};
+} */
 
 const nextCardBetter = (card1, card2) => {
   if (istrump(card1) && !istrump(card2)) {
@@ -18159,8 +18149,15 @@ const TicTacToe = {
   setup: () => {
     const deck = std_45s_deck;
     var start = {
-      dealer: 1,
-      under_the_gun: 2,
+      score: {
+        0: 0,
+        //players 0 and 2
+        1: 0 //players 1 and 3
+
+      },
+      dealer: 0,
+      under_the_gun: 1,
+      //player to the left of the dealer
       board: [],
       chat: [],
       tokens: {},
@@ -18210,6 +18207,7 @@ const TicTacToe = {
           3: []
         },
         declarer: [],
+        declaringpartnership: [],
         score: {
           0: 0,
           //northsouth
@@ -18267,7 +18265,13 @@ const TicTacToe = {
         }
       },
       onEnd: (G, ctx) => {
-        G.hand.declarer = G.hand.highest_bidder_yet;
+        G.hand.declarer = G.hand.highest_bidder_yet; //determine declaring partnership
+
+        if (G.hand.declarer === '0' || G.hand.declarer == '2') {
+          G.hand.declaringpartnership = 0;
+        } else {
+          G.hand.declaringpartnership = 1;
+        }
       }
     },
     declare: {
@@ -18328,7 +18332,7 @@ const TicTacToe = {
         order: {
           // Get the initial value of playOrderPos.
           // This is called at the beginning of the phase.
-          first: (G, ctx) => G.hand.declarer + 1,
+          first: (G, ctx) => (parseInt(G.hand.declarer) + 1) % ctx.numPlayers,
           // Get the next value of playOrderPos.
           // This is called at the end of each turn.
           // The phase ends if this returns undefined.

@@ -77,30 +77,6 @@ const getWinner = (G) => {
   }
   return { winner: winner, scores: { 0: p0Score, 1: p1Score } };
 };
-/*const generateDeck = () => {  //This is old code from the camel game.
-  let deck = [];
-  let id = 0;
-  Object.keys(DECK_CONTENTS).forEach((res) => {
-    let count = DECK_CONTENTS[res];
-    if (res === RESOURCES.camel) {
-      count -= 3;
-    }
-    for (let i = 0; i < count; i++) {
-      deck.push({
-        id: id++,
-        type: res,
-      });
-    }
-  });
-  deck = shuffleDeck(deck);
-  for (let i = 0; i < 3; i++) {
-    deck.push({
-      id: id++,
-      type: RESOURCES.camel,
-    });
-  }
-  return deck;
-}; */
 
 function Bid(G, ctx,amount) {
   const validBid = MoveValidate.Bid(G, ctx, amount)
@@ -116,115 +92,146 @@ function Bid(G, ctx,amount) {
 }
 
 function playCard(G, ctx, id) {
-      const istrump = (card) => {
-  if (card.suit === G.hand.trumpsuit || card.id === "AH") {
-    return true
-  } else {return false}
-}
-
-              const nextCardBetter = (card1, card2) => {
-  if (istrump(card1) && !(istrump(card2))) {
-    return false
-  } else if (!istrump(card1) && istrump(card2)) {
-    return true
-  } else if (istrump(card1) && istrump(card2)) {
-    if (card1.ranktrump < card2.ranktrump) {
-      return false
-    } else { return true}
-  } else if (!istrump(card1) && !istrump(card2)){
-    if (card1.suit === G.trick.suitled && card2.suit != G.trick.suitled) {
-      return false
-    } else if (card1.suit != G.trick.suitled && card2.suit === G.trick.suitled) {
+  const istrump = (card) => {
+    if (card.suit === G.hand.trumpsuit || card.id === "AH") {
       return true
-    } else if (card1.suit === G.trick.suitled && card2.suit === G.trick.suitled) {
-      if (card1.ranknontrump < card2.ranknontrump) {
+    } else {return false}
+  }
+
+  const nextCardBetter = (card1, card2) => {
+    if (istrump(card1) && !(istrump(card2))) {
+      return false
+    } else if (!istrump(card1) && istrump(card2)) {
+      return true
+    } else if (istrump(card1) && istrump(card2)) {
+      if (card1.ranktrump < card2.ranktrump) {
         return false
       } else { return true}
-
-
+    } else if (!istrump(card1) && !istrump(card2)){
+      if (card1.suit === G.trick.suitled && card2.suit != G.trick.suitled) {
+        return false
+      } else if (card1.suit != G.trick.suitled && card2.suit === G.trick.suitled) {
+        return true
+      } else if (card1.suit === G.trick.suitled && card2.suit === G.trick.suitled) {
+        if (card1.ranknontrump < card2.ranknontrump) {
+          return false
+        } else { return true}
+      }
+      else if (card1.suit != G.trick.suitled && card2.suit != G.trick.suitled) {
+        return "incomparable"
+      }
     }
-    else if (card1.suit != G.trick.suitled && card2.suit != G.trick.suitled) {
-      return "incomparable"
+  }
+  //put the card into play area
+  //remove the card from your hand
+  const validMove = MoveValidate.playCard(G, ctx, id);
+  //  console.log(validMove.valid)
+  if (!(validMove.valid)) {return Error(validMove.message)}
+  /*      //return Error(validMove.message) */
+
+  const p = ctx.currentPlayer;
+  let cards = G.players[p].cards.slice();
+  let cardToPlay = cards.filter((card) => card.id === id)[0];
+  cards = cards.filter((card) => card.id !== cardToPlay.id);
+  G.players[p].cards = cards;
+  G.table[p] = cardToPlay;
+  
+  //keep track of highest trump yet
+  if(istrump(cardToPlay)) {
+    if(G.hand.highest_trump_yet.length === 0) {
+      G.hand.highest_trump_yet = cardToPlay.ranktrump
+      G.hand.highest_trump_yet_player = p
+    } else {
+      if (cardToPlay.ranktrump < G.hand.highest_trump_yet) {
+        G.hand.highest_trump_yet = cardToPlay.ranktrump
+      G.hand.highest_trump_yet_player = p
+      }
     }
-  }}
-
-
-              //put the card into play area
-              //remove the card from your hand
-              const validMove = MoveValidate.playCard(G, ctx, id);
-            //  console.log(validMove.valid)
-              if (!(validMove.valid)) {return Error(validMove.message)}
-        /*      //return Error(validMove.message) */
-
-              const p = ctx.currentPlayer;
-              let cards = G.players[p].cards.slice();
-              let cardToPlay = cards.filter((card) => card.id === id)[0];
-              cards = cards.filter((card) => card.id !== cardToPlay.id);
-              G.players[p].cards = cards;
-              G.table[p] = cardToPlay;
-              if(istrump(cardToPlay)) {
-                if(G.hand.highest_trump_yet.length === 0) {
-                  G.hand.highest_trump_yet = cardToPlay.ranktrump
-                  G.hand.highest_trump_yet_player = p
-                } else {
-                  if (cardToPlay.ranktrump < G.hand.highest_trump_yet) {
-                    G.hand.highest_trump_yet = cardToPlay.ranktrump
-                  G.hand.highest_trump_yet_player = p
-                  }
-                }
-              }
-              if (G.trick.cards_played === 0 ) {
-                G.trick.suitled = cardToPlay.suit
-                G.trick.trumpled = istrump(cardToPlay)
-                if (G.trick.trumpled) {G.trick.ranktrumpled = cardToPlay.ranktrump}
-              }
-              G.trick.cards_played++;
-              if (G.trick.cards_played === 1) {
-                G.trick.bestcardthistrick = cardToPlay;
-                G.trick.bestplayerthistrick = p;
-              } else {
-              //  if ( cardToPlay.id > G.trick.bestcardthistrick.id ) {
-              if (nextCardBetter(G.trick.bestcardthistrick, cardToPlay)) {
-                  G.trick.bestcardthistrick = cardToPlay;
-                G.trick.bestplayerthistrick = p;
-                }
-              };
-              if (G.trick.cards_played === 4 ) {
-		          if (G.trick.bestplayerthistrick === '0' ||
-		          G.trick.bestplayerthistrick === '2') {
-		            G.trick.winningpartnership = 0;} else {
-		              G.trick.winningpartnership = 1;
-		            }
-
-             G.hand.score[G.trick.winningpartnership] += 5;
-             if (G.hand.score[0] + G.hand.score[1] === 25) {
-               if (G.hand.highest_trump_yet_player === '0' ||
-		          G.hand.highest_trump_yet_player === '2') {
-		            G.hand.score[0] += 5} else {
-		              G.hand.score[1] += 5;
-		            }
-             }
-              G.table = {
-          0: [],
-          1: [],
-          2: [],
-          3: []
-      };
-      let nexttolead = G.trick.bestplayerthistrick
-      G.trick = {
-          cards_played: 0,
-          bestcardthistrick: [],
-          bestplayerthistrick: [],
-          winningpartnership: [],
-          suitled: [],
-          trumpled: [],
-          ranktrumpled: []
-          };
-
-          ctx.events.endTurn({ next: nexttolead });
-             };
-             ctx.events.endTurn();
-              }
+  }
+  
+  //keep track of suit led and rank if trump (for reneging)
+  if (G.trick.cards_played === 0 ) {
+    G.trick.suitled = cardToPlay.suit
+    G.trick.trumpled = istrump(cardToPlay)
+    if (G.trick.trumpled) {G.trick.ranktrumpled = cardToPlay.ranktrump}
+  }
+  
+  G.trick.cards_played++;
+  
+  //track best card played
+  if (G.trick.cards_played === 1) {
+    G.trick.bestcardthistrick = cardToPlay;
+    G.trick.bestplayerthistrick = p;
+  } else {
+  //  if ( cardToPlay.id > G.trick.bestcardthistrick.id ) {
+  if (nextCardBetter(G.trick.bestcardthistrick, cardToPlay)) {
+      G.trick.bestcardthistrick = cardToPlay;
+    G.trick.bestplayerthistrick = p;
+    }
+  };
+  
+  //score the trick
+  if (G.trick.cards_played === 4 ) {
+    //identify winning partnership
+    if (G.trick.bestplayerthistrick === '0' || G.trick.bestplayerthistrick === '2') {
+      G.trick.winningpartnership = 0;
+    } else {
+      G.trick.winningpartnership = 1;
+    }
+  
+    G.hand.score[G.trick.winningpartnership] += 5;
+    
+    //Check if this was the last trick of the hand 
+    if (G.hand.score[0] + G.hand.score[1] === 25) {
+      //5 points for highest trump
+      if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
+        G.hand.score[0] += 5
+      } else {
+        G.hand.score[1] += 5;
+      }
+      
+      //update the game score
+      //check if someone went 25 without the 5
+      //check if it was 30 for 60
+      
+      //check if the declaring partnership didn't make their bid
+      
+      if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
+        G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet
+      }
+      //check if the defending partnership had 100 points
+      
+      //check if the game is over
+      
+      //deal a new hand
+    }
+    
+    //clear the table for next trick
+    G.table = {
+      0: [],
+      1: [],
+      2: [],
+      3: []
+    };
+    
+    // set nexttolead before clearing trick state
+    let nexttolead = G.trick.bestplayerthistrick
+    
+    G.trick = {
+      cards_played: 0,
+      bestcardthistrick: [],
+      bestplayerthistrick: [],
+      winningpartnership: [],
+      suitled: [],
+      trumpled: [],
+      ranktrumpled: []
+    };
+    
+    //go to next trick
+    ctx.events.endTurn({ next: nexttolead });
+  };
+  ctx.events.endTurn();
+}
 
 function declareSuit(G, ctx, suit) {
   G.hand.trumpsuit = suit
@@ -251,7 +258,6 @@ G.trick.northsouthscore = 5;
 // identify winning player
 // identify highest trump if played
 }; */
-
 
 const std_45s_deck = [
   { id: 'AH', ranktrump: 3, suit: "Hearts"},
@@ -307,11 +313,7 @@ const std_45s_deck = [
   { id: '3C', ranktrump: 8, ranknontrump: 6, suit: "Clubs"},
   { id: '2C', ranktrump: 7, ranknontrump: 5, suit: "Clubs"}]
 
-
-//const trumpsuit = "Clubs"
-
-
-
+/*
 const compare = (card1, card2) => {
   if (istrump(card1) && !(istrump(card2))) {
     return card1
@@ -335,7 +337,8 @@ const compare = (card1, card2) => {
     else if (card1.suit != suitled && card2.suit != suitled) {
       return "incomparable"
     }
-  }}
+  }
+} */
 
 const nextCardBetter = (card1, card2) => {
   if (istrump(card1) && !(istrump(card2))) {
@@ -368,8 +371,12 @@ export const TicTacToe = {
   setup: () => {
     const deck = std_45s_deck;
     var start = {
-      dealer: 1,
-      under_the_gun: 2,
+      score: {
+            0: 0, //players 0 and 2
+            1: 0 //players 1 and 3
+          },
+      dealer: 0,
+      under_the_gun: 1, //player to the left of the dealer
       board: [],
       chat: [],
       tokens: {},
@@ -403,6 +410,7 @@ export const TicTacToe = {
         3: []
       },
         declarer: [],
+        declaringpartnership: [],
         score: {
             0: 0, //northsouth
             1: 0 //eastwest
@@ -460,7 +468,15 @@ export const TicTacToe = {
           }
         }
       },
-      onEnd: (G, ctx) => {G.hand.declarer = G.hand.highest_bidder_yet}
+      onEnd: (G, ctx) => {
+        G.hand.declarer = G.hand.highest_bidder_yet
+        //determine declaring partnership
+        if (G.hand.declarer === '0' || G.hand.declarer == '2') {
+          G.hand.declaringpartnership = 0  
+        } else{
+          G.hand.declaringpartnership = 1
+        }
+      }
     },
     declare:{
    //   onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
@@ -513,7 +529,7 @@ export const TicTacToe = {
         order: {
         // Get the initial value of playOrderPos.
         // This is called at the beginning of the phase.
-        first: (G, ctx) => G.hand.declarer + 1,
+        first: (G, ctx) => (parseInt(G.hand.declarer) + 1) % ctx.numPlayers,
         // Get the next value of playOrderPos.
         // This is called at the end of each turn.
         // The phase ends if this returns undefined.
