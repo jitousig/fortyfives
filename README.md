@@ -13,3 +13,4 @@
 - [ ] Fish suit names
 - [ ] Game lobby
 - [ ] Deployment to Heroku
+- [ ] Validate suit declaration

@@ -18341,11 +18341,13 @@ const TicTacToe = {
       }
     }
   },
-  turn: {
-    onEnd: (G, ctx) => {//Update states here like deck size
-      //    G.deckSize = G.deck.length;
-    }
-  },
+
+  /*  turn: {
+      onEnd: (G, ctx) => {
+        //Update states here like deck size
+    //    G.deckSize = G.deck.length;
+      },
+    },*/
   endIf: (G, ctx) => {
     // Victory Condition here
     if (G.deck.length <= 0) {
