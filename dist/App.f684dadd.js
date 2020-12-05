@@ -17763,15 +17763,24 @@ function playCard(G, ctx, id) {
         G.hand.score[1] += 5;
       } //update the game score
       //check if someone went 25 without the 5
-      //check if it was 30 for 60
+      //score declaring partnership
       //check if the declaring partnership didn't make their bid
 
 
       if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
         G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet;
-      } //check if the defending partnership had 100 points
-      //check if the game is over
-      //deal a new hand
+      } else {
+        if (G.hand.highest_bid_value_yet === 30) {
+          G.score[G.hand.declaringpartnership] += 60;
+        } else {
+          G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership];
+        }
+      } //score defending partnership
+
+
+      if (G.score[G.hand.defendingpartnership] < 100) {
+        G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership];
+      } //deal a new hand
 
     } //clear the table for next trick
 
@@ -18150,7 +18159,7 @@ const TicTacToe = {
     const deck = std_45s_deck;
     var start = {
       score: {
-        0: 0,
+        0: 125,
         //players 0 and 2
         1: 0 //players 1 and 3
 
@@ -18208,6 +18217,7 @@ const TicTacToe = {
         },
         declarer: [],
         declaringpartnership: [],
+        defendingpartnership: [],
         score: {
           0: 0,
           //northsouth
@@ -18269,8 +18279,10 @@ const TicTacToe = {
 
         if (G.hand.declarer === '0' || G.hand.declarer == '2') {
           G.hand.declaringpartnership = 0;
+          G.hand.defendingpartnership = 1;
         } else {
           G.hand.declaringpartnership = 1;
+          G.hand.defendingpartnership = 0;
         }
       }
     },
@@ -18353,24 +18365,33 @@ const TicTacToe = {
       },
     },*/
   endIf: (G, ctx) => {
-    // Victory Condition here
-    if (G.deck.length <= 0) {
-      console.log("Ending game since we are out of cards!");
-      return getWinner(G);
-    }
+    if (G.score[0] > 120 || G.score[1] > 120) {
+      if (G.score[0] > G.score[1]) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } // Victory Condition here
+
+    /*    if (G.deck.length <= 0) {
+          console.log("Ending game since we are out of cards!");
+          return getWinner(G);
+        } */
+
     /*
     const numResourcesLeft = Object.values(G.tokens).filter((res) => {
-    return res.length > 0;
+      return res.length > 0;
     }).length;
     console.log(numResourcesLeft, " resources left");
     if (numResourcesLeft <= NUM_RESOURCES_END) {
-    console.log(
-      "Ending game since we have reached the minimum number of trading token stacks!"
-    );
-    return getWinner(G);
+      console.log(
+        "Ending game since we have reached the minimum number of trading token stacks!"
+      );
+      return getWinner(G);
     } */
 
-  }
+  },
+  onEnd: (G, ctx) => G
 };
 exports.TicTacToe = TicTacToe;
 },{"../constants":"constants.js","boardgame.io/core":"node_modules/boardgame.io/dist/esm/core.js","../config.js":"config.js","./moveValidation":"src/moveValidation.js"}],"src/App.js":[function(require,module,exports) {
