@@ -209,10 +209,10 @@ function playCard(G, ctx, id) {
       if (G.score[G.hand.defendingpartnership] < 100) {
         G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership]
       }
-      
-
-      
       //deal a new hand
+      G.dealer = (G.dealer + 1) % ctx.numPlayers
+      G.under_the_gun = (G.under_the + 1) % ctx.numPlayers
+      ctx.events.endPhase()
     }
     
     //clear the table for next trick
@@ -381,7 +381,7 @@ export const TicTacToe = {
     const deck = std_45s_deck;
     var start = {
       score: {
-            0: 125, //players 0 and 2
+            0: 0, //players 0 and 2
             1: 0 //players 1 and 3
           },
       dealer: 0,
