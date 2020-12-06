@@ -591,7 +591,7 @@ export const TicTacToe = {
           // Get the next value of playOrderPos.
           // This is called at the end of each turn.
           // The phase ends if this returns undefined.
-         // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
+          next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
         }
       },
       onEnd: (G, ctx) => {

@@ -157,31 +157,31 @@ numPlayers: 4 });
         this.client.moves.declareSuit(suitchoice);
       }; 
       
-biddingform.addEventListener("submit", function(event) {
-  var data = new FormData(biddingform);
-  var output = "";
-  var bidamount = ""
-  for (const entry of data) {
-    output = output + entry[0] + "=" + entry[1][1] + "\r";
-    bidamount = entry[1]
-  };
-//  log.innerText = output;
-//  console.log(output)
-  handleSubmitClick(bidamount)
-  event.preventDefault();
-}, false);
+      biddingform.addEventListener("submit", function(event) {
+        var data = new FormData(biddingform);
+        var output = "";
+        var bidamount = ""
+        for (const entry of data) {
+          output = output + entry[0] + "=" + entry[1][1] + "\r";
+          bidamount = entry[1]
+        };
+      //  log.innerText = output;
+      //  console.log(output)
+        handleSubmitClick(bidamount)
+        event.preventDefault();
+      }, false);
 
-declarationform.addEventListener("submit", function(event) {
-  var data = new FormData(declarationform);
-  var output = "";
-  var bidamount = ""
-  var suitchoice = ""
-  for (const entry of data) {
-    output = output + entry[0] + "=" + entry[1][1] + "\r";
-    suitchoice = entry[1]
-  };
+      declarationform.addEventListener("submit", function(event) {
+        var data = new FormData(declarationform);
+        var output = "";
+      //  var bidamount = ""
+        var suitchoice = ""
+        for (const entry of data) {
+          output = output + entry[0] + "=" + entry[1][1] + "\r";
+          suitchoice = entry[1]
+        };
 //  log.innerText = output;
-  console.log(suitchoice)
+//  console.log(suitchoice)
   handleDeclareSubmitClick(suitchoice)
   event.preventDefault();
 }, false); 
@@ -238,7 +238,10 @@ declarationform.addEventListener("submit", function(event) {
       // Update cells to display the values in game state.
       kittycards.forEach(kittycard => {
         const kittycardid = parseInt(kittycard.dataset.kittycardid);
-        const cellValue = state.G.hand.kitty[kittycardid].id;
+        var cellValue = ""
+        if (state.G.hand.kitty.length === 3){
+          cellValue = state.G.hand.kitty[kittycardid].id;
+        }
    //     board.textContent = playerId !== null ? playerId : '';
         
         kittycard.textContent = cellValue !== null ? cellValue : '';
