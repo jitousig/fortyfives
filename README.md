@@ -28,13 +28,13 @@ Open 4 browsers windows to localhost:1234
 - [x] Validate suit declaration
 - [x] UI: Trick scoring
 - [x] UI: Hand scoring
-- [ ] Bug: Ace of hearts not treated as trump when trump is lead (incorrect error of: you have to play trump)
+- [x] Bug: Ace of hearts not treated as trump when trump is lead (incorrect error of: you have to play trump)
 - [x] Bug: Declare phase comes after hand scoring?
-- [ ] Multiplayer clients
-- [ ] Hide hand secrets
+- [x] Multiplayer clients
+- [x] Hide hand secrets
 - [ ] Automatic loss if you go 25 without the 5
 - [ ] Game lobby
-- [ ] Deployment to Heroku
+- [x] Deployment to Heroku
 - [ ] Validate shuffling
 - [ ] Fish suit names
 
