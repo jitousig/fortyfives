@@ -97,13 +97,25 @@ export const MoveValidate = {
 
   discard: (G, ctx, cardsToDiscard) => {
   const p = ctx.currentPlayer;
-  const l = cardsToDiscard.length
+  const l = cardsToDiscard.length;
+  const uniq = [...new Set(cardsToDiscard)];
   let cards = G.players[p].cards.slice();
 
+  //check cardsToDiscard only contains cards in your hand
   for (let i = 0; i < l; i++) {
     if (cards.filter((card) => card.id === cardsToDiscard[i]).length != 1) {
       return result(false, "You can only discard cards in your hand")
     }
+  }
+
+  //check cardsToDiscard doesn't have any duplicate cards
+  if (uniq.length !== l) {
+    return result(false, "You can only discard each card once")
+  }
+
+  //check you're discarding enough cards
+  if (cards.length - l > 5) {
+    return result(false, "You must discard down to five cards in hand")
   }
 
   return result(true, "ok")
