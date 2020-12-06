@@ -18608,12 +18608,12 @@ class TicTacToeClient {
 
     for (let i = 0; i < 4; i++) {
       const playerid = i;
-      board.push("<td class=\"bid\" data-playerid=\"".concat(playerid, "\"></td>"));
+      bids.push("<td class=\"bid\" data-playerid=\"".concat(playerid, "\"></td>"));
     } // Add the HTML to our app <div>.
     // We’ll use the empty <p> to display the game winner later.
 
 
-    this.rootElement.innerHTML = "\n<form> \n  <p>Please select your bid:</p>\n  <div>\n    <input type=\"radio\" id=\"bidChoice1\"\n           name=\"bid\" value=\"pass\">\n    <label for=\"bidChoice1\">Pass</label>\n    <input type=\"radio\" id=\"bidChoice2\"\n           name=\"bid\" value=\"20\">\n    <label for=\"bidChoice2\">20</label>\n    <input type=\"radio\" id=\"bidChoice3\"\n           name=\"bid\" value=\"25\">\n    <label for=\"bidChoice3\">25</label>\n    <input type=\"radio\" id=\"bidChoice4\"\n           name=\"bid\" value=\"30\">\n    <label for=\"bidChoice4\">30</label>\n        <input type=\"radio\" id=\"bidChoice5\"\n           name=\"bid\" value=\"hold\">\n    <label for=\"bidChoice5\">Hold</label>\n  </div>\n  <div>\n    <button type=\"submit\">Submit</button>\n  </div>\n</form>\n        <table>".concat(bids.join(''), "</table>\n        <table>").concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n        <p class=\"score\"></p>\n      ");
+    this.rootElement.innerHTML = "\n<form> \n  <p>Please select your bid:</p>\n  <div>\n    <input type=\"radio\" id=\"bidChoice1\"\n           name=\"bid\" value=\"pass\">\n    <label for=\"bidChoice1\">Pass</label>\n    <input type=\"radio\" id=\"bidChoice2\"\n           name=\"bid\" value=\"20\">\n    <label for=\"bidChoice2\">20</label>\n    <input type=\"radio\" id=\"bidChoice3\"\n           name=\"bid\" value=\"25\">\n    <label for=\"bidChoice3\">25</label>\n    <input type=\"radio\" id=\"bidChoice4\"\n           name=\"bid\" value=\"30\">\n    <label for=\"bidChoice4\">30</label>\n        <input type=\"radio\" id=\"bidChoice5\"\n           name=\"bid\" value=\"hold\">\n    <label for=\"bidChoice5\">Hold</label>\n  </div>\n  <div>\n    <button type=\"submit\">Submit</button>\n  </div>\n</form>\n        <table>".concat(bids.join(''), "</table>\n        <br>\n        <table>").concat(hand.join(''), "</table>\n        <br>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n        <p class=\"score\"></p>\n      ");
   }
 
   attachListeners() {

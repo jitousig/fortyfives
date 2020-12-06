@@ -34,7 +34,7 @@ numPlayers: 4 });
           const bids = []
           for (let i=0; i < 4; i++) {
             const playerid = i
-            board.push(`<td class="bid" data-playerid="${playerid}"></td>`)
+            bids.push(`<td class="bid" data-playerid="${playerid}"></td>`)
           }
 
       // Add the HTML to our app <div>.
@@ -64,7 +64,9 @@ numPlayers: 4 });
   </div>
 </form>
         <table>${bids.join('')}</table>
+        <br>
         <table>${hand.join('')}</table>
+        <br>
         <table>${board.join('')}</table>
         <p class="currentplayer"></p>
         <p class="score"></p>
