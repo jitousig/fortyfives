@@ -36,11 +36,22 @@ numPlayers: 4 });
             const playerid = i
             bids.push(`<td class="bid" data-playerid="${playerid}"></td>`)
           }
+          
+          const kitty = []
+          for (let i=0; i < 3; i++) {
+            const kittycardid = i
+            kitty.push(`<td class="kittycard" data-kittycardid="${kittycardid}"></td>`)
+          }
 
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
-<form> 
+
+        
+        <p class="currentphase"></p>
+        <p class="currentplayer"></p>
+        
+<form id="biddingform"> 
   <p>Please select your bid:</p>
   <div>
     <input type="radio" id="bidChoice1"
@@ -65,10 +76,33 @@ numPlayers: 4 });
 </form>
         <table>${bids.join('')}</table>
         <br>
+        
+                <form id="declarationform"> 
+  <p>Please select the trump suit:</p>
+  <div>
+    <input type="radio" id="suitChoice1"
+           name="suit" value="Diamonds">
+    <label for="bidChoice1">Diamonds</label>
+    <input type="radio" id="suitChoice2"
+           name="suit" value="Hearts">
+    <label for="suitChoice2">Hearts</label>
+    <input type="radio" id="suitChoice3"
+           name="suit" value="Spades">
+    <label for="bidChoice3">Spades</label>
+    <input type="radio" id="suitChoice4"
+           name="suit" value="Clubs">
+    <label for="bidChoice4">Clubs</label>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+        
+        <table>${kitty.join('')}</table>
         <table>${hand.join('')}</table>
         <br>
         <table>${board.join('')}</table>
-        <p class="currentplayer"></p>
+
         <p class="score"></p>
       `;
       }
@@ -87,7 +121,9 @@ numPlayers: 4 });
         card.onclick = handleCellClick;
       });
       
-      var form = this.rootElement.querySelector("form");
+      var biddingform = this.rootElement.querySelector('#biddingform');
+      var declarationform = this.rootElement.querySelector("#declarationform");
+
     //  var log = document.querySelector("#log");
       
       function logSubmit(event) {
@@ -107,7 +143,7 @@ numPlayers: 4 });
  //    form.addEventListener('submit', logSubmit);
   //    event.preventDefault();
       const handleSubmitClick = bidamount => {
-        const id = event.target.textContent;
+    //    const id = event.target.textContent;
         console.log(bidamount)
         if (bidamount === "20" || bidamount === "25" || bidamount === "30") {
           bidamount = parseInt(bidamount)
@@ -115,8 +151,14 @@ numPlayers: 4 });
         this.client.moves.Bid(bidamount);
       };
       
-      form.addEventListener("submit", function(event) {
-  var data = new FormData(form);
+      const handleDeclareSubmitClick = suitchoice => {
+    
+        console.log(suitchoice)
+        this.client.moves.declareSuit(suitchoice);
+      }; 
+      
+biddingform.addEventListener("submit", function(event) {
+  var data = new FormData(biddingform);
   var output = "";
   var bidamount = ""
   for (const entry of data) {
@@ -124,10 +166,25 @@ numPlayers: 4 });
     bidamount = entry[1]
   };
 //  log.innerText = output;
-  console.log(output)
+//  console.log(output)
   handleSubmitClick(bidamount)
   event.preventDefault();
 }, false);
+
+declarationform.addEventListener("submit", function(event) {
+  var data = new FormData(declarationform);
+  var output = "";
+  var bidamount = ""
+  var suitchoice = ""
+  for (const entry of data) {
+    output = output + entry[0] + "=" + entry[1][1] + "\r";
+    suitchoice = entry[1]
+  };
+//  log.innerText = output;
+  console.log(suitchoice)
+  handleDeclareSubmitClick(suitchoice)
+  event.preventDefault();
+}, false); 
       
       }
       
@@ -177,12 +234,25 @@ numPlayers: 4 });
         bid.textContent = cellValue !== null ? cellValue : '';
       });
       
+      const kittycards = this.rootElement.querySelectorAll('.kittycard');
+      // Update cells to display the values in game state.
+      kittycards.forEach(kittycard => {
+        const kittycardid = parseInt(kittycard.dataset.kittycardid);
+        const cellValue = state.G.hand.kitty[kittycardid].id;
+   //     board.textContent = playerId !== null ? playerId : '';
+        
+        kittycard.textContent = cellValue !== null ? cellValue : '';
+      });
+      
       const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer');
       // Update the element to show a winner if any.
       messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer
       
       const messagecurrentscore = this.rootElement.querySelector('.score');
       messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1]
+      
+      const messagecurrentphase = this.rootElement.querySelector('.currentphase');
+      messagecurrentphase.textContent = "The phase is " + state.ctx.phase
     }
 }
 
