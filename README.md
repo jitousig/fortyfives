@@ -4,17 +4,16 @@
 - [x] Scoring
 - [x] 30 for 60
 - [x] No pegging past 100
-- [ ] UI: Bidding
-- [ ] UI: Declaration
+- [x] UI: Bidding
+- [x] UI: Declaration
 - [ ] UI: Discard
 - [ ] UI: Trick scoring
 - [ ] UI: Hand scoring
-- [ ] UI: Kitty
+- [x] UI: Kitty
 - [ ] Automatic loss if you go 25 without the 5
 - [x] Move validation
 - [ ] Hide hand secrets
 - [ ] Validate shuffling
-- [ ] UI
 - [ ] Multiplayer clients
 - [ ] Fish suit names
 - [ ] Game lobby
