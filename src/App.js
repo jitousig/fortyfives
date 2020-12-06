@@ -47,7 +47,7 @@ numPlayers: 4 });
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
 
-        
+        <p class="dealer"></p>
         <p class="currentphase"></p>
         <p class="currentplayer"></p>
         
@@ -256,6 +256,9 @@ numPlayers: 4 });
       
       const messagecurrentphase = this.rootElement.querySelector('.currentphase');
       messagecurrentphase.textContent = "The phase is " + state.ctx.phase
+      
+      const messagedealer = this.rootElement.querySelector('.dealer');
+      messagedealer.textContent = "The dealer is player " + state.G.dealer
     }
 }
 
