@@ -1,9 +1,11 @@
 import { Client } from 'boardgame.io/client';
+import { Local } from 'boardgame.io/multiplayer'
 import { TicTacToe } from './Game';
 
 class TicTacToeClient {
       constructor(rootElement) {
               this.client = Client({ game: TicTacToe,
+              multiplayer: Local(),
 numPlayers: 4 });
               this.client.start();
               this.rootElement = rootElement;
@@ -326,5 +328,14 @@ numPlayers: 4 });
     }
 }
 
+//const appElement = document.getElementById('app');
+//const app = new TicTacToeClient(appElement);
+
+
 const appElement = document.getElementById('app');
-const app = new TicTacToeClient(appElement);
+const playerIDs = ['0', '1','2','3'];
+const clients = playerIDs.map(playerID => {
+  const rootElement = document.createElement('div');
+  appElement.append(rootElement);
+  return new TicTacToeClient(rootElement, { playerID });
+});
