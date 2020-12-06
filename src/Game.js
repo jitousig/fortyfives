@@ -626,6 +626,7 @@ export const TicTacToe = {
         }
       }
     },
+    
     play: {
       //start: true,
       moves: { playCard },

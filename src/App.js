@@ -12,6 +12,7 @@ numPlayers: 4 });
               this.client.subscribe(state => this.update(state));
                     }
 
+
       createBoard() {
           // Create cells in rows for the Tic-Tac-Toe board.
           const hand = [];
@@ -101,9 +102,34 @@ numPlayers: 4 });
   //      this.client.moves.Bid(20)
       }
  
-     form.addEventListener('submit', logSubmit);
-
+ //    form.addEventListener('submit', logSubmit);
+  //    event.preventDefault();
+      const handleSubmitClick = bidamount => {
+        const id = event.target.textContent;
+        console.log(bidamount)
+        if (bidamount === "20" || bidamount === "25" || bidamount === "30") {
+          bidamount = parseInt(bidamount)
+        }
+        this.client.moves.Bid(bidamount);
+      };
+      
+      form.addEventListener("submit", function(event) {
+  var data = new FormData(form);
+  var output = "";
+  var bidamount = ""
+  for (const entry of data) {
+    output = output + entry[0] + "=" + entry[1][1] + "\r";
+    bidamount = entry[1]
+  };
+//  log.innerText = output;
+  console.log(output)
+  handleSubmitClick(bidamount)
+  event.preventDefault();
+}, false);
+      
       }
+      
+      
 
       update(state) {
       // Get all the board cells.
