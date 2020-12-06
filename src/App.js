@@ -43,8 +43,9 @@ numPlayers: 4 });
       // This event handler will read the cell id from a cell’s
       // `data-id` attribute and make the `clickCell` move.
       const handleCellClick = event => {
-        const id = parseInt(event.target.dataset.id);
-        this.client.moves.clickCell(id);
+        const id = event.target.textContent;
+        console.log(id)
+        this.client.moves.playCard(id);
       };
       // Attach the event listener to each of the board cells.
       const cards = this.rootElement.querySelectorAll('.card');
@@ -60,8 +61,6 @@ numPlayers: 4 });
       cards.forEach(card => {
         const cellId = parseInt(card.dataset.cardid);
         const playerId = parseInt(card.dataset.playerid);
-        console.log(state.G.players[playerId].cards.length)
-      //  console.log(cellId)
       let cellValue = ""
         if (cellId <= state.G.players[playerId].cards.length -1){
           cellValue = state.G.players[playerId].cards[cellId].id;
@@ -83,9 +82,7 @@ numPlayers: 4 });
       // Update cells to display the values in game state.
       boards.forEach(board => {
         const playerId = parseInt(board.dataset.playerid);
-        console.log(playerId)
         const cellValue = state.G.table[playerId].id;
-        console.log(cellValue)
    //     board.textContent = playerId !== null ? playerId : '';
         
         board.textContent = cellValue !== null ? cellValue : '';

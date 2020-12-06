@@ -17653,6 +17653,75 @@ function Bid(G, ctx, amount) {
   ctx.events.endTurn();
 }
 
+function scoreTrick(G, ctx) {
+  //identify winning partnership
+  if (G.trick.bestplayerthistrick === '0' || G.trick.bestplayerthistrick === '2') {
+    G.trick.winningpartnership = 0;
+  } else {
+    G.trick.winningpartnership = 1;
+  }
+
+  G.hand.score[G.trick.winningpartnership] += 5; //Check if this was the last trick of the hand 
+
+  if (G.hand.score[0] + G.hand.score[1] === 25) {
+    ctx.events.setPhase("handscoring");
+  } //clear the table for next trick
+
+
+  G.table = {
+    0: [],
+    1: [],
+    2: [],
+    3: []
+  }; // set nexttolead before clearing trick state
+
+  let nexttolead = G.trick.bestplayerthistrick;
+  G.trick = {
+    cards_played: 0,
+    bestcardthistrick: [],
+    bestplayerthistrick: [],
+    winningpartnership: [],
+    suitled: [],
+    trumpled: [],
+    ranktrumpled: []
+  }; //go to next trick
+
+  ctx.events.endPhase();
+}
+
+function scoreHand(G, ctx) {
+  //5 points for highest trump
+  if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
+    G.hand.score[0] += 5;
+  } else {
+    G.hand.score[1] += 5;
+  } //update the game score
+  //check if someone went 25 without the 5
+  //score declaring partnership
+  //check if the declaring partnership didn't make their bid
+
+
+  if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
+    G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet;
+  } else {
+    if (G.hand.highest_bid_value_yet === 30) {
+      G.score[G.hand.declaringpartnership] += 60;
+    } else {
+      G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership];
+    }
+  } //score defending partnership
+
+
+  if (G.score[G.hand.defendingpartnership] < 100) {
+    G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership];
+  } //deal a new hand
+
+
+  G.dealer = (G.dealer + 1) % ctx.numPlayers;
+  G.under_the_gun = (G.under_the + 1) % ctx.numPlayers;
+  ctx.events.endPhase();
+}
+
 function playCard(G, ctx, id) {
   const istrump = card => {
     if (card.suit === G.hand.trumpsuit || card.id === "AH") {
@@ -17743,76 +17812,82 @@ function playCard(G, ctx, id) {
     }
   }
 
-  ; //score the trick
+  ;
 
   if (G.trick.cards_played === 4) {
-    //identify winning partnership
-    if (G.trick.bestplayerthistrick === '0' || G.trick.bestplayerthistrick === '2') {
-      G.trick.winningpartnership = 0;
-    } else {
-      G.trick.winningpartnership = 1;
-    }
+    ctx.events.endPhase();
+  } //score the trick
 
-    G.hand.score[G.trick.winningpartnership] += 5; //Check if this was the last trick of the hand 
-
-    if (G.hand.score[0] + G.hand.score[1] === 25) {
-      //5 points for highest trump
-      if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
-        G.hand.score[0] += 5;
+  /*  if (G.trick.cards_played === 4 ) {
+      //identify winning partnership
+      if (G.trick.bestplayerthistrick === '0' || G.trick.bestplayerthistrick === '2') {
+        G.trick.winningpartnership = 0;
       } else {
-        G.hand.score[1] += 5;
-      } //update the game score
-      //check if someone went 25 without the 5
-      //score declaring partnership
-      //check if the declaring partnership didn't make their bid
-
-
-      if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
-        G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet;
-      } else {
-        if (G.hand.highest_bid_value_yet === 30) {
-          G.score[G.hand.declaringpartnership] += 60;
+        G.trick.winningpartnership = 1;
+      }
+    
+      G.hand.score[G.trick.winningpartnership] += 5;
+      
+      //Check if this was the last trick of the hand 
+      if (G.hand.score[0] + G.hand.score[1] === 25) {
+        //5 points for highest trump
+        if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
+          G.hand.score[0] += 5
         } else {
-          G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership];
+          G.hand.score[1] += 5;
         }
-      } //score defending partnership
+        
+        //update the game score
+        //check if someone went 25 without the 5
+        
+        //score declaring partnership
+        //check if the declaring partnership didn't make their bid
+        if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
+          G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet
+        } else {
+          if (G.hand.highest_bid_value_yet === 30) {
+          G.score[G.hand.declaringpartnership] += 60
+          } else {
+            G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership]
+          }
+        }
+        
+        //score defending partnership
+        if (G.score[G.hand.defendingpartnership] < 100) {
+          G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership]
+        }
+        //deal a new hand
+        G.dealer = (G.dealer + 1) % ctx.numPlayers
+        G.under_the_gun = (G.under_the + 1) % ctx.numPlayers
+        ctx.events.endPhase()
+      }
+      
+      //clear the table for next trick
+      G.table = {
+        0: [],
+        1: [],
+        2: [],
+        3: []
+      };
+      
+      // set nexttolead before clearing trick state
+      let nexttolead = G.trick.bestplayerthistrick
+      
+      G.trick = {
+        cards_played: 0,
+        bestcardthistrick: [],
+        bestplayerthistrick: [],
+        winningpartnership: [],
+        suitled: [],
+        trumpled: [],
+        ranktrumpled: []
+      };
+      
+      //go to next trick
+      ctx.events.endTurn({ next: nexttolead });
+    }; */
 
 
-      if (G.score[G.hand.defendingpartnership] < 100) {
-        G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership];
-      } //deal a new hand
-
-
-      G.dealer = (G.dealer + 1) % ctx.numPlayers;
-      G.under_the_gun = (G.under_the + 1) % ctx.numPlayers;
-      ctx.events.endPhase();
-    } //clear the table for next trick
-
-
-    G.table = {
-      0: [],
-      1: [],
-      2: [],
-      3: []
-    }; // set nexttolead before clearing trick state
-
-    let nexttolead = G.trick.bestplayerthistrick;
-    G.trick = {
-      cards_played: 0,
-      bestcardthistrick: [],
-      bestplayerthistrick: [],
-      winningpartnership: [],
-      suitled: [],
-      trumpled: [],
-      ranktrumpled: []
-    }; //go to next trick
-
-    ctx.events.endTurn({
-      next: nexttolead
-    });
-  }
-
-  ;
   ctx.events.endTurn();
 }
 
@@ -18344,7 +18419,7 @@ const TicTacToe = {
       moves: {
         playCard
       },
-      next: 'bid',
+      next: 'trickscoring',
       turn: {
         order: {
           // Get the initial value of playOrderPos.
@@ -18358,6 +18433,68 @@ const TicTacToe = {
           // This is called at the beginning of the game / phase.
           // playOrder: (G, ctx) => [...],
 
+        }
+      }
+    },
+    trickscoring: {
+      // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
+      moves: {
+        scoreTrick
+      },
+      next: 'play',
+
+      /* turn: {
+         order: {
+      // Get the initial value of playOrderPos.
+      // This is called at the beginning of the phase.
+      first: (G, ctx) => G.under_the_gun,
+        // Get the next value of playOrderPos.
+      // This is called at the end of each turn.
+      // The phase ends if this returns undefined.
+      next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
+        }
+       } */
+      turn: {
+        order: {
+          first: (G, ctx) => parseInt(G.trick.bestplayerthistrick),
+          next: (G, ctx) => {
+            if ((ctx.playOrderPos + 1) % ctx.numPlayers != G.under_the_gun) {
+              return (ctx.playOrderPos + 1) % ctx.numPlayers;
+            } else {
+              ctx.events.endPhase();
+            }
+          }
+        }
+      }
+    },
+    handscoring: {
+      // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
+      moves: {
+        scoreHand
+      },
+      next: 'bid',
+
+      /* turn: {
+         order: {
+      // Get the initial value of playOrderPos.
+      // This is called at the beginning of the phase.
+      first: (G, ctx) => G.under_the_gun,
+        // Get the next value of playOrderPos.
+      // This is called at the end of each turn.
+      // The phase ends if this returns undefined.
+      next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
+        }
+       } */
+      turn: {
+        order: {
+          first: (G, ctx) => parseInt(G.dealer),
+          next: (G, ctx) => {
+            if ((ctx.playOrderPos + 1) % ctx.numPlayers != G.under_the_gun) {
+              return (ctx.playOrderPos + 1) % ctx.numPlayers;
+            } else {
+              ctx.events.endPhase();
+            }
+          }
         }
       }
     }
@@ -18451,8 +18588,9 @@ class TicTacToeClient {
     // This event handler will read the cell id from a cell’s
     // `data-id` attribute and make the `clickCell` move.
     const handleCellClick = event => {
-      const id = parseInt(event.target.dataset.id);
-      this.client.moves.clickCell(id);
+      const id = event.target.textContent;
+      console.log(id);
+      this.client.moves.playCard(id);
     }; // Attach the event listener to each of the board cells.
 
 
@@ -18469,8 +18607,6 @@ class TicTacToeClient {
     cards.forEach(card => {
       const cellId = parseInt(card.dataset.cardid);
       const playerId = parseInt(card.dataset.playerid);
-      console.log(state.G.players[playerId].cards.length); //  console.log(cellId)
-
       let cellValue = "";
 
       if (cellId <= state.G.players[playerId].cards.length - 1) {
@@ -18494,9 +18630,7 @@ class TicTacToeClient {
 
     boards.forEach(board => {
       const playerId = parseInt(board.dataset.playerid);
-      console.log(playerId);
-      const cellValue = state.G.table[playerId].id;
-      console.log(cellValue); //     board.textContent = playerId !== null ? playerId : '';
+      const cellValue = state.G.table[playerId].id; //     board.textContent = playerId !== null ? playerId : '';
 
       board.textContent = cellValue !== null ? cellValue : '';
     });
