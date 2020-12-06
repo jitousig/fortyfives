@@ -11,7 +11,7 @@
 - [x] UI: Kitty
 - [x] Move validation
 - [x] Validate suit declaration
-- [ ] UI: Trick scoring
+- [x] UI: Trick scoring
 - [ ] UI: Hand scoring
 - [ ] Multiplayer clients
 - [ ] Hide hand secrets

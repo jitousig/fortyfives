@@ -108,6 +108,8 @@ numPlayers: 4 });
         <p class="discards"></p>
         <button type="button" id="ResetDiscardBtn">Reset Discard List</button>
         <button type="button" id="DiscardBtn">Discard</button>
+        <button type="button" id="ScoreTrick">Score Trick</button>
+        <button type="button" id="ScoreHand">Score Hand</button>
         <table>${board.join('')}</table>
 
         <p class="score"></p>
@@ -147,6 +149,16 @@ numPlayers: 4 });
         handleResetDiscardClick()
       });
       
+      
+      var handleScoreTrickClick = event => {
+        this.client.moves.scoreTrick()
+      };
+      
+      this.rootElement.querySelector("#ScoreTrick").addEventListener("click", function() {
+        handleScoreTrickClick()
+      });
+      
+      
       const handleCellClick = event => {
         const id = event.target.textContent;
         
@@ -161,6 +173,7 @@ numPlayers: 4 });
         this.client.moves.playCard(id);
         }
       };
+      
       // Attach the event listener to each of the board cells.
       const cards = this.rootElement.querySelectorAll('.card');
       cards.forEach(card => {
@@ -198,8 +211,6 @@ numPlayers: 4 });
       };
       
       const handleDeclareSubmitClick = suitchoice => {
-    
-        console.log(suitchoice)
         this.client.moves.declareSuit(suitchoice);
       }; 
       
