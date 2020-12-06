@@ -1,9 +1,14 @@
 ### TO DO
 
 - [x] Bidding
-- [ ] Scoring
-- [ ] 30 for 60
-- [ ] No pegging past 100
+- [x] Scoring
+- [x] 30 for 60
+- [x] No pegging past 100
+- [ ] UI: Bidding
+- [ ] UI: Declaration
+- [ ] UI: Discard
+- [ ] UI: Trick scoring
+- [ ] UI: Hand scoring
 - [ ] Automatic loss if you go 25 without the 5
 - [ ] Move validation
 - [ ] Hide hand secrets
