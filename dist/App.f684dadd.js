@@ -18581,7 +18581,7 @@ class TicTacToeClient {
     // We’ll use the empty <p> to display the game winner later.
 
 
-    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table}\n        <p class=\"winner\"> hello </p>\n      ");
+    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n      ");
   }
 
   attachListeners() {
@@ -18634,6 +18634,10 @@ class TicTacToeClient {
 
       board.textContent = cellValue !== null ? cellValue : '';
     });
+    const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer'); // Update the element to show a winner if any.
+
+    console.log(messageCurrentPlayer);
+    messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer;
   }
 
 }

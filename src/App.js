@@ -34,8 +34,8 @@ numPlayers: 4 });
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
         <table>${hand.join('')}</table>
-        <table>${board.join('')}</table}
-        <p class="winner"> hello </p>
+        <table>${board.join('')}</table>
+        <p class="currentplayer"></p>
       `;
       }
 
@@ -87,6 +87,10 @@ numPlayers: 4 });
         
         board.textContent = cellValue !== null ? cellValue : '';
       });
+      const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer');
+      // Update the element to show a winner if any.
+      console.log(messageCurrentPlayer)
+      messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer
     }
 }
 
