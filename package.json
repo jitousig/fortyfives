@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "start": "node -r esm server.js"
+    "start": "node -r esm server.js",
+    "build": "parcel build index.html --out-dir build"
   },
   "browserslist": "> 0.4% and not ie 11",
   "dependencies": {

@@ -17,9 +17,11 @@ const PORT = process.env.PORT || 8000;
 console.log("got to line 17")
 
 // Build path relative to the server.js file
-const frontEndAppBuildPath = path.resolve(__dirname, './build');
+const frontEndAppBuildPath = path.resolve(__dirname, '../build');
+//const frontEndAppBuildPath = __dirname
 server.app.use(serve(frontEndAppBuildPath))
 
+console.log(frontEndAppBuildPath)
 console.log("got to line 23")
 
 
