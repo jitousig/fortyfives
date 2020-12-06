@@ -29,6 +29,7 @@ Open 4 browsers windows to localhost:1234
 - [x] UI: Trick scoring
 - [x] UI: Hand scoring
 - [x] Bug: Ace of hearts not treated as trump when trump is lead (incorrect error of: you have to play trump)
+- [ ] Bug: First three players passing makes player undefined
 - [x] Bug: Declare phase comes after hand scoring?
 - [x] Multiplayer clients
 - [x] Hide hand secrets
