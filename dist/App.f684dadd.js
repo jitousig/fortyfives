@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"node_modules/immer/dist/immer.esm.js":[function(require,module,exports) {
+})({"../../node_modules/immer/dist/immer.esm.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1175,7 +1175,7 @@ exports.produce = an;
 exports.Immer = on;
 var _default = an;
 exports.default = _default;
-},{}],"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js":[function(require,module,exports) {
+},{}],"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2483,13 +2483,14 @@ const ActivePlayers = {
   }
 };
 exports.v = ActivePlayers;
-},{"immer":"node_modules/immer/dist/immer.esm.js"}],"node_modules/boardgame.io/dist/esm/reducer-ef40323d.js":[function(require,module,exports) {
+},{"immer":"../../node_modules/immer/dist/immer.esm.js"}],"../../node_modules/boardgame.io/dist/esm/reducer-9aaf373c.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.C = CreateGameReducer;
+exports.I = IsLongFormMove;
 exports.P = ProcessGameConfig;
 
 var _turnOrder7578f7f = require("./turn-order-7578f7f3.js");
@@ -2904,7 +2905,7 @@ function Flow({
     arg,
     playerID
   }) {
-    if (typeof arg === 'string') {
+    if (typeof arg === 'string' || arg === _turnOrder7578f7f.S.NULL) {
       arg = {
         stage: arg
       };
@@ -2917,9 +2918,9 @@ function Flow({
       activePlayers,
       _activePlayersMoveLimit,
       _activePlayersNumMoves
-    } = ctx;
+    } = ctx; // Checking if stage is valid, even Stage.NULL
 
-    if (arg.stage) {
+    if (arg.stage !== undefined) {
       if (activePlayers === null) {
         activePlayers = {};
       }
@@ -3158,9 +3159,10 @@ function Flow({
       const conf = GetPhase(ctx);
       const stage = conf.turn.stages[activePlayers[playerID]];
       if (stage && stage.next) arg = stage.next;
-    }
+    } // Checking if arg is a valid stage, even Stage.NULL
 
-    if (next && arg) {
+
+    if (next && arg !== undefined) {
       next.push({
         fn: UpdateStage,
         arg,
@@ -3891,7 +3893,7 @@ function CreateGameReducer({
     }
   };
 }
-},{"./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js"}],"node_modules/flatted/esm/index.js":[function(require,module,exports) {
+},{"./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js"}],"../../node_modules/flatted/esm/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3986,7 +3988,7 @@ const parse = Flatted.parse;
 exports.parse = parse;
 const stringify = Flatted.stringify;
 exports.stringify = stringify;
-},{}],"node_modules/boardgame.io/dist/esm/ai-4091d3f9.js":[function(require,module,exports) {
+},{}],"../../node_modules/boardgame.io/dist/esm/ai-18cd7d4f.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -3998,7 +4000,7 @@ exports.R = exports.M = exports.B = void 0;
 
 var _turnOrder7578f7f = require("./turn-order-7578f7f3.js");
 
-var _reducerEf40323d = require("./reducer-ef40323d.js");
+var _reducer9aaf373c = require("./reducer-9aaf373c.js");
 
 /*
  * Copyright 2018 The boardgame.io Authors
@@ -4132,7 +4134,7 @@ class MCTSBot extends Bot {
 
     this.iterationCallback = iterationCallback || (() => {});
 
-    this.reducer = (0, _reducerEf40323d.C)({
+    this.reducer = (0, _reducer9aaf373c.C)({
       game
     });
     this.iterations = iterations;
@@ -4468,7 +4470,7 @@ async function Simulate({
   depth
 }) {
   if (depth === undefined) depth = 10000;
-  const reducer = (0, _reducerEf40323d.C)({
+  const reducer = (0, _reducer9aaf373c.C)({
     game
   });
   let metadata = null;
@@ -4498,7 +4500,7 @@ async function Simulate({
     metadata
   };
 }
-},{"./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-ef40323d.js":"node_modules/boardgame.io/dist/esm/reducer-ef40323d.js"}],"node_modules/boardgame.io/dist/esm/Debug-ba7187a3.js":[function(require,module,exports) {
+},{"./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-9aaf373c.js":"../../node_modules/boardgame.io/dist/esm/reducer-9aaf373c.js"}],"../../node_modules/boardgame.io/dist/esm/Debug-8bbbea21.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -4509,11 +4511,11 @@ exports.D = void 0;
 
 var _turnOrder7578f7f = require("./turn-order-7578f7f3.js");
 
-var _reducerEf40323d = require("./reducer-ef40323d.js");
+var _reducer9aaf373c = require("./reducer-9aaf373c.js");
 
 var _flatted = require("flatted");
 
-var _ai4091d3f = require("./ai-4091d3f9.js");
+var _ai18cd7d4f = require("./ai-18cd7d4f.js");
 
 function noop() {}
 
@@ -13572,7 +13574,7 @@ function instance$v($$self, $$props, $$invalidate) {
   const {
     secondaryPane
   } = getContext("secondaryPane");
-  const reducer = (0, _reducerEf40323d.C)({
+  const reducer = (0, _reducer9aaf373c.C)({
     game: client.game
   });
   const initialState = client.getInitialState();
@@ -14860,8 +14862,8 @@ function instance$x($$self, $$props, $$invalidate) {
     secondaryPane
   } = getContext("secondaryPane");
   const bots = {
-    "MCTS": _ai4091d3f.M,
-    "Random": _ai4091d3f.R
+    "MCTS": _ai18cd7d4f.M,
+    "Random": _ai18cd7d4f.R
   };
   let debug = false;
   let progress = null;
@@ -14899,7 +14901,7 @@ function instance$x($$self, $$props, $$invalidate) {
   let bot;
 
   if (client.game.ai) {
-    bot = new _ai4091d3f.M({
+    bot = new _ai18cd7d4f.M({
       game: client.game,
       enumerate: client.game.ai.enumerate,
       iterationCallback
@@ -14929,7 +14931,7 @@ function instance$x($$self, $$props, $$invalidate) {
     $$invalidate(5, botAction = null);
     metadata = null;
     $$invalidate(3, iterationCounter = 0);
-    const t = await (0, _ai4091d3f.S)(client, bot);
+    const t = await (0, _ai18cd7d4f.S)(client, bot);
 
     if (t) {
       $$invalidate(5, botAction = t.payload.type);
@@ -14944,7 +14946,7 @@ function instance$x($$self, $$props, $$invalidate) {
 
     const step = async () => {
       for (let i = 0; i < iterations; i++) {
-        const action = await (0, _ai4091d3f.S)(client, bot);
+        const action = await (0, _ai18cd7d4f.S)(client, bot);
         if (!action) break;
         await new Promise(resolve => setTimeout(resolve, sleepTimeout));
       }
@@ -15494,7 +15496,7 @@ class Debug extends SvelteComponent {
 }
 
 exports.D = Debug;
-},{"./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-ef40323d.js":"node_modules/boardgame.io/dist/esm/reducer-ef40323d.js","flatted":"node_modules/flatted/esm/index.js","./ai-4091d3f9.js":"node_modules/boardgame.io/dist/esm/ai-4091d3f9.js"}],"node_modules/symbol-observable/es/ponyfill.js":[function(require,module,exports) {
+},{"./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-9aaf373c.js":"../../node_modules/boardgame.io/dist/esm/reducer-9aaf373c.js","flatted":"../../node_modules/flatted/esm/index.js","./ai-18cd7d4f.js":"../../node_modules/boardgame.io/dist/esm/ai-18cd7d4f.js"}],"../../node_modules/symbol-observable/es/ponyfill.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15521,7 +15523,7 @@ function symbolObservablePonyfill(root) {
 }
 
 ;
-},{}],"node_modules/symbol-observable/es/index.js":[function(require,module,exports) {
+},{}],"../../node_modules/symbol-observable/es/index.js":[function(require,module,exports) {
 var global = arguments[3];
 "use strict";
 
@@ -15552,7 +15554,7 @@ if (typeof self !== 'undefined') {
 var result = (0, _ponyfill.default)(root);
 var _default = result;
 exports.default = _default;
-},{"./ponyfill.js":"node_modules/symbol-observable/es/ponyfill.js"}],"node_modules/redux/es/redux.js":[function(require,module,exports) {
+},{"./ponyfill.js":"../../node_modules/symbol-observable/es/ponyfill.js"}],"../../node_modules/redux/es/redux.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16232,7 +16234,7 @@ function isCrushed() {}
 if ("development" !== 'production' && typeof isCrushed.name === 'string' && isCrushed.name !== 'isCrushed') {
   warning('You are currently using minified code outside of NODE_ENV === "production". ' + 'This means that you are running a slower development build of Redux. ' + 'You can use loose-envify (https://github.com/zertosh/loose-envify) for browserify ' + 'or setting mode to production in webpack (https://webpack.js.org/concepts/mode/) ' + 'to ensure you have the correct code for your production build.');
 }
-},{"symbol-observable":"node_modules/symbol-observable/es/index.js"}],"node_modules/boardgame.io/dist/esm/initialize-ff341f37.js":[function(require,module,exports) {
+},{"symbol-observable":"../../node_modules/symbol-observable/es/index.js"}],"../../node_modules/boardgame.io/dist/esm/initialize-35b12b4f.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16242,7 +16244,7 @@ exports.I = InitializeGame;
 
 var _turnOrder7578f7f = require("./turn-order-7578f7f3.js");
 
-var _reducerEf40323d = require("./reducer-ef40323d.js");
+var _reducer9aaf373c = require("./reducer-9aaf373c.js");
 
 /*
  * Copyright 2020 The boardgame.io Authors
@@ -16260,7 +16262,7 @@ function InitializeGame({
   numPlayers,
   setupData
 }) {
-  game = (0, _reducerEf40323d.P)(game);
+  game = (0, _reducer9aaf373c.P)(game);
 
   if (!numPlayers) {
     numPlayers = 2;
@@ -16310,7 +16312,7 @@ function InitializeGame({
 
   return initial;
 }
-},{"./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-ef40323d.js":"node_modules/boardgame.io/dist/esm/reducer-ef40323d.js"}],"node_modules/boardgame.io/dist/esm/client-b699de9a.js":[function(require,module,exports) {
+},{"./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-9aaf373c.js":"../../node_modules/boardgame.io/dist/esm/reducer-9aaf373c.js"}],"../../node_modules/boardgame.io/dist/esm/client-1338e362.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -16318,15 +16320,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.C = Client;
 
-var _DebugBa7187a = require("./Debug-ba7187a3.js");
+var _Debug8bbbea = require("./Debug-8bbbea21.js");
 
 var _redux = require("redux");
 
 var _turnOrder7578f7f = require("./turn-order-7578f7f3.js");
 
-var _reducerEf40323d = require("./reducer-ef40323d.js");
+var _reducer9aaf373c = require("./reducer-9aaf373c.js");
 
-var _initializeFf341f = require("./initialize-ff341f37.js");
+var _initialize35b12b4f = require("./initialize-35b12b4f.js");
 
 /**
  * Class to manage boardgame.io clients and limit debug panel rendering.
@@ -16463,7 +16465,7 @@ class ClientManager {
     let target = document.body;
 
     if ("development" !== 'production') {
-      DebugImpl = _DebugBa7187a.D;
+      DebugImpl = _Debug8bbbea.D;
     }
 
     if (client.debugOpt && client.debugOpt !== true) {
@@ -16559,7 +16561,7 @@ class _ClientImpl {
     credentials,
     enhancer
   }) {
-    this.game = (0, _reducerEf40323d.P)(game);
+    this.game = (0, _reducer9aaf373c.P)(game);
     this.playerID = playerID;
     this.matchID = matchID;
     this.credentials = credentials;
@@ -16569,14 +16571,14 @@ class _ClientImpl {
     this.gameStateOverride = null;
     this.subscribers = {};
     this._running = false;
-    this.reducer = (0, _reducerEf40323d.C)({
+    this.reducer = (0, _reducer9aaf373c.C)({
       game: this.game,
       isClient: multiplayer !== undefined
     });
     this.initialState = null;
 
     if (!multiplayer) {
-      this.initialState = (0, _initializeFf341f.I)({
+      this.initialState = (0, _initialize35b12b4f.I)({
         game: this.game,
         numPlayers
       });
@@ -16852,7 +16854,7 @@ class _ClientImpl {
 function Client(opts) {
   return new _ClientImpl(opts);
 }
-},{"./Debug-ba7187a3.js":"node_modules/boardgame.io/dist/esm/Debug-ba7187a3.js","redux":"node_modules/redux/es/redux.js","./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-ef40323d.js":"node_modules/boardgame.io/dist/esm/reducer-ef40323d.js","./initialize-ff341f37.js":"node_modules/boardgame.io/dist/esm/initialize-ff341f37.js"}],"node_modules/boardgame.io/dist/esm/client-61b8ced8.js":[function(require,module,exports) {
+},{"./Debug-8bbbea21.js":"../../node_modules/boardgame.io/dist/esm/Debug-8bbbea21.js","redux":"../../node_modules/redux/es/redux.js","./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","./reducer-9aaf373c.js":"../../node_modules/boardgame.io/dist/esm/reducer-9aaf373c.js","./initialize-35b12b4f.js":"../../node_modules/boardgame.io/dist/esm/initialize-35b12b4f.js"}],"../../node_modules/boardgame.io/dist/esm/client-61b8ced8.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17150,7 +17152,7 @@ class LobbyClient {
 }
 
 exports.L = LobbyClient;
-},{}],"node_modules/boardgame.io/dist/esm/client.js":[function(require,module,exports) {
+},{}],"../../node_modules/boardgame.io/dist/esm/client.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17159,7 +17161,7 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "Client", {
   enumerable: true,
   get: function () {
-    return _clientB699de9a.C;
+    return _client1338e.C;
   }
 });
 Object.defineProperty(exports, "LobbyClient", {
@@ -17169,7 +17171,7 @@ Object.defineProperty(exports, "LobbyClient", {
   }
 });
 
-require("./Debug-ba7187a3.js");
+require("./Debug-8bbbea21.js");
 
 require("redux");
 
@@ -17177,18 +17179,18 @@ require("./turn-order-7578f7f3.js");
 
 require("immer");
 
-require("./reducer-ef40323d.js");
+require("./reducer-9aaf373c.js");
 
-require("./initialize-ff341f37.js");
+require("./initialize-35b12b4f.js");
 
 require("flatted");
 
-require("./ai-4091d3f9.js");
+require("./ai-18cd7d4f.js");
 
-var _clientB699de9a = require("./client-b699de9a.js");
+var _client1338e = require("./client-1338e362.js");
 
 var _client61b8ced = require("./client-61b8ced8.js");
-},{"./Debug-ba7187a3.js":"node_modules/boardgame.io/dist/esm/Debug-ba7187a3.js","redux":"node_modules/redux/es/redux.js","./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","immer":"node_modules/immer/dist/immer.esm.js","./reducer-ef40323d.js":"node_modules/boardgame.io/dist/esm/reducer-ef40323d.js","./initialize-ff341f37.js":"node_modules/boardgame.io/dist/esm/initialize-ff341f37.js","flatted":"node_modules/flatted/esm/index.js","./ai-4091d3f9.js":"node_modules/boardgame.io/dist/esm/ai-4091d3f9.js","./client-b699de9a.js":"node_modules/boardgame.io/dist/esm/client-b699de9a.js","./client-61b8ced8.js":"node_modules/boardgame.io/dist/esm/client-61b8ced8.js"}],"constants.js":[function(require,module,exports) {
+},{"./Debug-8bbbea21.js":"../../node_modules/boardgame.io/dist/esm/Debug-8bbbea21.js","redux":"../../node_modules/redux/es/redux.js","./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","immer":"../../node_modules/immer/dist/immer.esm.js","./reducer-9aaf373c.js":"../../node_modules/boardgame.io/dist/esm/reducer-9aaf373c.js","./initialize-35b12b4f.js":"../../node_modules/boardgame.io/dist/esm/initialize-35b12b4f.js","flatted":"../../node_modules/flatted/esm/index.js","./ai-18cd7d4f.js":"../../node_modules/boardgame.io/dist/esm/ai-18cd7d4f.js","./client-1338e362.js":"../../node_modules/boardgame.io/dist/esm/client-1338e362.js","./client-61b8ced8.js":"../../node_modules/boardgame.io/dist/esm/client-61b8ced8.js"}],"constants.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17233,7 +17235,7 @@ const LARGEST_HERD_BONUS = 5; // Number of resources present when it ends the ga
 exports.LARGEST_HERD_BONUS = LARGEST_HERD_BONUS;
 const NUM_RESOURCES_END = 3;
 exports.NUM_RESOURCES_END = NUM_RESOURCES_END;
-},{}],"node_modules/boardgame.io/dist/esm/core.js":[function(require,module,exports) {
+},{}],"../../node_modules/boardgame.io/dist/esm/core.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17306,7 +17308,7 @@ const PlayerView = {
   }
 };
 exports.PlayerView = PlayerView;
-},{"./turn-order-7578f7f3.js":"node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","immer":"node_modules/immer/dist/immer.esm.js"}],"config.js":[function(require,module,exports) {
+},{"./turn-order-7578f7f3.js":"../../node_modules/boardgame.io/dist/esm/turn-order-7578f7f3.js","immer":"../../node_modules/immer/dist/immer.esm.js"}],"config.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17445,12 +17447,23 @@ const MoveValidate = {
   discard: (G, ctx, cardsToDiscard) => {
     const p = ctx.currentPlayer;
     const l = cardsToDiscard.length;
-    let cards = G.players[p].cards.slice();
+    const uniq = [...new Set(cardsToDiscard)];
+    let cards = G.players[p].cards.slice(); //check cardsToDiscard only contains cards in your hand
 
     for (let i = 0; i < l; i++) {
       if (cards.filter(card => card.id === cardsToDiscard[i]).length != 1) {
         return result(false, "You can only discard cards in your hand");
       }
+    } //check cardsToDiscard doesn't have any duplicate cards
+
+
+    if (uniq.length !== l) {
+      return result(false, "You can only discard each card once");
+    } //check you're discarding enough cards
+
+
+    if (cards.length - l > 5) {
+      return result(false, "You must discard down to five cards in hand");
     }
 
     return result(true, "ok");
@@ -17923,7 +17936,7 @@ function discard(G, ctx, cardsToDiscard) {
   let cardsToKeep = cards.filter(card => !cardsToDiscard.includes(card.id));
   G.players[p].cards = cardsToKeep;
 
-  for (let i = 0; i < l; i++) {
+  while (G.players[p].cards.length < 5) {
     G.players[p].cards.push(G.deck.pop());
   }
 
@@ -18419,11 +18432,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-      // Get the next value of playOrderPos.
+       // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-      }
+       }
        } */
       turn: {
         order: {
@@ -18473,11 +18486,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-      // Get the next value of playOrderPos.
+       // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-      }
+       }
        } */
       turn: {
         order: {
@@ -18504,11 +18517,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-      // Get the next value of playOrderPos.
+       // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-      }
+       }
        } */
       turn: {
         order: {
@@ -18561,7 +18574,7 @@ const TicTacToe = {
   onEnd: (G, ctx) => G
 };
 exports.TicTacToe = TicTacToe;
-},{"../constants":"constants.js","boardgame.io/core":"node_modules/boardgame.io/dist/esm/core.js","../config.js":"config.js","./moveValidation":"src/moveValidation.js"}],"src/App.js":[function(require,module,exports) {
+},{"../constants":"constants.js","boardgame.io/core":"../../node_modules/boardgame.io/dist/esm/core.js","../config.js":"config.js","./moveValidation":"src/moveValidation.js"}],"src/App.js":[function(require,module,exports) {
 "use strict";
 
 var _client = require("boardgame.io/client");
@@ -18730,7 +18743,7 @@ class TicTacToeClient {
 
 const appElement = document.getElementById('app');
 const app = new TicTacToeClient(appElement);
-},{"boardgame.io/client":"node_modules/boardgame.io/dist/esm/client.js","./Game":"src/Game.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"boardgame.io/client":"../../node_modules/boardgame.io/dist/esm/client.js","./Game":"src/Game.js"}],"../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -18758,7 +18771,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62373" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54608" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -18934,5 +18947,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/App.js"], null)
+},{}]},{},["../../AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","src/App.js"], null)
 //# sourceMappingURL=/App.f684dadd.js.map
