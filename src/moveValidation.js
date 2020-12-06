@@ -39,15 +39,15 @@ export const MoveValidate = {
     let filteredhand = cards.filter((card) => card.id === id)
     if (cards.filter((card) => card.id === id).length != 1) {
       return result(false, "That isn't a card in your hand!");}
-    
+
     const istrump = (card) => {
   if (card.suit === G.hand.trumpsuit || card.id === "AH") {
-    return true 
+    return true
   } else {return false}
 }
-    
+
     let cardToPlay = cards.filter((card) => card.id === id)[0];
-      
+
     if (G.trick.cards_played > 0) {
       if (G.trick.trumpled && !istrump(cardToPlay)) {
         if (cards.filter((card) => istrump(card) && (card.ranktrump > G.trick.ranktrumpled || card.ranktrump > 3)).length >0) {
@@ -57,9 +57,9 @@ export const MoveValidate = {
       if (!G.trick.trumpled && !istrump(cardToPlay) && cardToPlay.suit != G.trick.suitled) {
         if (cards.filter((card) => card.suit === G.trick.suitled).length > 0)
         {return result(false, "You need to follow suit or play trump.")}
-      }    }  
+      }    }
     return result(true, "ok"); /*
-    
+
     if (typeof id !== "number") {
       return result(false, "Select 1 and only 1 card for takeOne");
     }
@@ -83,7 +83,7 @@ export const MoveValidate = {
     }*/
   },
   Bid: (G, ctx, amount) => {
-  const p = ctx.currentPlayer;  
+  const p = ctx.currentPlayer;
   if (![20,25,30,"pass","hold"].includes(amount)) {
     return result(false, "That is not a valid bid");
   }
@@ -94,6 +94,16 @@ export const MoveValidate = {
     return result(false, "You have to bid more than the previous player")}
     return result(true, "ok")
   },
+
+  discard: (G, ctx, cardsToDiscard) => {
+  const p = ctx.currentPlayer;
+  if (!cardsToDiscard.every(v => G.players[p].cards.includes(v))) {
+    return result(false, "You can only discard cards in your hand!")
+  }
+  return result(true, "ok")
+  },
+
+
   takeOne: (G, ctx, id) => {
     if (typeof id !== "number") {
       return result(false, "Select 1 and only 1 card for takeOne");

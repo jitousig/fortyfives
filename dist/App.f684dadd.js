@@ -17442,6 +17442,15 @@ const MoveValidate = {
 
     return result(true, "ok");
   },
+  discard: (G, ctx, cardsToDiscard) => {
+    const p = ctx.currentPlayer;
+
+    if (!cardsToDiscard.every(v => G.players[p].cards.includes(v))) {
+      return result(false, "You can only discard cards in your hand!");
+    }
+
+    return result(true, "ok");
+  },
   takeOne: (G, ctx, id) => {
     if (typeof id !== "number") {
       return result(false, "Select 1 and only 1 card for takeOne");
@@ -17661,7 +17670,7 @@ function scoreTrick(G, ctx) {
     G.trick.winningpartnership = 1;
   }
 
-  G.hand.score[G.trick.winningpartnership] += 5; //Check if this was the last trick of the hand 
+  G.hand.score[G.trick.winningpartnership] += 5; //Check if this was the last trick of the hand
 
   if (G.hand.score[0] + G.hand.score[1] === 25) {
     ctx.events.setPhase("handscoring");
@@ -17826,10 +17835,10 @@ function playCard(G, ctx, id) {
       } else {
         G.trick.winningpartnership = 1;
       }
-    
+  
       G.hand.score[G.trick.winningpartnership] += 5;
-      
-      //Check if this was the last trick of the hand 
+  
+      //Check if this was the last trick of the hand
       if (G.hand.score[0] + G.hand.score[1] === 25) {
         //5 points for highest trump
         if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
@@ -17837,10 +17846,10 @@ function playCard(G, ctx, id) {
         } else {
           G.hand.score[1] += 5;
         }
-        
+  
         //update the game score
         //check if someone went 25 without the 5
-        
+  
         //score declaring partnership
         //check if the declaring partnership didn't make their bid
         if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
@@ -17852,7 +17861,7 @@ function playCard(G, ctx, id) {
             G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership]
           }
         }
-        
+  
         //score defending partnership
         if (G.score[G.hand.defendingpartnership] < 100) {
           G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership]
@@ -17862,7 +17871,7 @@ function playCard(G, ctx, id) {
         G.under_the_gun = (G.under_the + 1) % ctx.numPlayers
         ctx.events.endPhase()
       }
-      
+  
       //clear the table for next trick
       G.table = {
         0: [],
@@ -17870,10 +17879,10 @@ function playCard(G, ctx, id) {
         2: [],
         3: []
       };
-      
+  
       // set nexttolead before clearing trick state
       let nexttolead = G.trick.bestplayerthistrick
-      
+  
       G.trick = {
         cards_played: 0,
         bestcardthistrick: [],
@@ -17883,7 +17892,7 @@ function playCard(G, ctx, id) {
         trumpled: [],
         ranktrumpled: []
       };
-      
+  
       //go to next trick
       ctx.events.endTurn({ next: nexttolead });
     }; */
@@ -17898,6 +17907,12 @@ function declareSuit(G, ctx, suit) {
 }
 
 function discard(G, ctx, cardsToDiscard) {
+  const validDiscard = _moveValidation.MoveValidate.discard(G, ctx, cardsToDiscard);
+
+  if (!validDiscard.valid) {
+    return Error(validDiscard.message);
+  }
+
   const p = ctx.currentPlayer;
   const l = cardsToDiscard.length;
   let cards = G.players[p].cards.slice();
@@ -18252,18 +18267,10 @@ const TicTacToe = {
       tokens: {},
       players: {
         0: {
-          trade_tokens: [],
-          cards: [],
-          T3: 0,
-          T4: 0,
-          T5: 0
+          cards: []
         },
         1: {
-          trade_tokens: [],
-          cards: [],
-          T3: 0,
-          T4: 0,
-          T5: 0
+          cards: []
         },
         2: {
           cards: []
@@ -18290,6 +18297,7 @@ const TicTacToe = {
       },
       hand: {
         nexttoplay: 0,
+        kitty: [],
         bidding: {
           0: [],
           1: [],
@@ -18320,6 +18328,10 @@ const TicTacToe = {
       start.players[1].cards.push(start.deck.pop());
       start.players[2].cards.push(start.deck.pop());
       start.players[3].cards.push(start.deck.pop());
+    }
+
+    for (let i = 0; i < 3; i++) {
+      start.hand.kitty.push(start.deck.pop());
     } // Adding deckSize so that the Deck can be stripped in the future
     // deckSize will get updated after turn onEnd
     //  start.deckSize = start.deck.length;
@@ -18384,6 +18396,11 @@ const TicTacToe = {
           // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
 
         }
+      },
+      onEnd: (G, ctx) => {
+        for (let i = 0; i < 3; i++) {
+          G.players[G.hand.declarer].cards.push(G.hand.kitty.pop());
+        }
       }
     },
     draw: {
@@ -18398,11 +18415,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-        // Get the next value of playOrderPos.
+      // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-        }
+      }
        } */
       turn: {
         order: {
@@ -18418,7 +18435,7 @@ const TicTacToe = {
       }
     },
     play: {
-      //    start: true,
+      //start: true,
       moves: {
         playCard
       },
@@ -18452,11 +18469,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-        // Get the next value of playOrderPos.
+      // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-        }
+      }
        } */
       turn: {
         order: {
@@ -18483,11 +18500,11 @@ const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-        // Get the next value of playOrderPos.
+      // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-        }
+      }
        } */
       turn: {
         order: {
