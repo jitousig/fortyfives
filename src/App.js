@@ -72,6 +72,8 @@ class TicTacToeClient {
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
         <h3>Player ${this.client.playerID}</h3>
+        <h3 class="statusmessage"></h3>
+
         <p class="dealer"></p>
         <p class="currentphase"></p>
         <p class="currentplayer"></p>
@@ -350,6 +352,9 @@ class TicTacToeClient {
       
       const messagetrump = this.rootElement.querySelector('.trumpsuit');
       messagetrump.textContent = "The trump suit is " + state.G.hand.trumpsuit
+      
+      const statusmessage = this.rootElement.querySelector('.statusmessage');
+      statusmessage.textContent = state.G.statusmessage
     }
 }
 

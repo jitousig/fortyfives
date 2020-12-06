@@ -346,6 +346,7 @@ function discard(G, ctx, cardsToDiscard){
   while (G.players[p].cards.length < 5) {
       G.players[p].cards.push(G.deck.pop());
     }
+    G.statusmessage = "Player " + p + " discarded " + l + " cards."
     ctx.events.endTurn()
 }
 
@@ -470,6 +471,7 @@ export const TicTacToe = {
   setup: () => {
     const deck = std_45s_deck;
     var start = {
+      statusmessage: "Start of game",
       score: {
             0: 0, //players 0 and 2
             1: 0 //players 1 and 3
@@ -648,6 +650,7 @@ export const TicTacToe = {
     },
     draw: {
       // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
+      onEnd: (G, ctx) => {G.statusmessage = ""},
       moves: { discard },
       next: 'play',
        /* turn: {
