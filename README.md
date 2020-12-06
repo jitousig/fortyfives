@@ -1,5 +1,7 @@
 ### Install instructions
-
+-Clone this repo, then install the following npm dependencies:
+-npm install boardgame.io
+-npm install --save-dev parcel-bundler
 -npm install esm
 
 ### How to run
