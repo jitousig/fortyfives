@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "parcel index.html --open",
-    "serve": "node -r esm server.js"
+    "start": "node -r esm server.js",
+    "serve": "node -r esm src/server.js"
   },
   "browserslist": "> 0.4% and not ie 11",
   "dependencies": {
