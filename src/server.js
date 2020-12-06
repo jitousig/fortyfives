@@ -14,9 +14,14 @@ import { TicTacToe } from './Game.js';
 const server = Server({ games: [TicTacToe] });
 const PORT = process.env.PORT || 8000;
 
+console.log("got to line 17")
+
 // Build path relative to the server.js file
 const frontEndAppBuildPath = path.resolve(__dirname, './build');
 server.app.use(serve(frontEndAppBuildPath))
+
+console.log("got to line 23")
+
 
 server.run(PORT, () => {
   server.app.use(
