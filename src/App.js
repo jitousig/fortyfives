@@ -36,6 +36,7 @@ numPlayers: 4 });
         <table>${hand.join('')}</table>
         <table>${board.join('')}</table>
         <p class="currentplayer"></p>
+        <p class="score"></p>
       `;
       }
 
@@ -91,6 +92,8 @@ numPlayers: 4 });
       // Update the element to show a winner if any.
       console.log(messageCurrentPlayer)
       messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer
+      const messagecurrentscore = this.rootElement.querySelector('.score');
+      messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1]
     }
 }
 

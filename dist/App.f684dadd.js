@@ -17686,6 +17686,7 @@ function scoreTrick(G, ctx) {
     ranktrumpled: []
   }; //go to next trick
 
+  G.hand.nexttoplay = nexttolead;
   ctx.events.endPhase();
 }
 
@@ -18288,6 +18289,7 @@ const TicTacToe = {
         ranktrumpled: []
       },
       hand: {
+        nexttoplay: 0,
         bidding: {
           0: [],
           1: [],
@@ -18354,7 +18356,8 @@ const TicTacToe = {
         }
       },
       onEnd: (G, ctx) => {
-        G.hand.declarer = G.hand.highest_bidder_yet; //determine declaring partnership
+        G.hand.declarer = G.hand.highest_bidder_yet;
+        G.hand.nexttoplay = (parseInt(G.hand.declarer) + 1) % ctx.numPlayers; //determine declaring partnership
 
         if (G.hand.declarer === '0' || G.hand.declarer == '2') {
           G.hand.declaringpartnership = 0;
@@ -18424,7 +18427,8 @@ const TicTacToe = {
         order: {
           // Get the initial value of playOrderPos.
           // This is called at the beginning of the phase.
-          first: (G, ctx) => (parseInt(G.hand.declarer) + 1) % ctx.numPlayers,
+          //     first: (G, ctx) => (parseInt(G.hand.declarer) + 1) % ctx.numPlayers,
+          first: (G, ctx) => parseInt(G.hand.nexttoplay),
           // Get the next value of playOrderPos.
           // This is called at the end of each turn.
           // The phase ends if this returns undefined.
@@ -18581,7 +18585,7 @@ class TicTacToeClient {
     // We’ll use the empty <p> to display the game winner later.
 
 
-    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n      ");
+    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n        <p class=\"score\"></p>\n      ");
   }
 
   attachListeners() {
@@ -18638,6 +18642,8 @@ class TicTacToeClient {
 
     console.log(messageCurrentPlayer);
     messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer;
+    const messagecurrentscore = this.rootElement.querySelector('.score');
+    messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1];
   }
 
 }

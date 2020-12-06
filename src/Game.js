@@ -128,6 +128,7 @@ function scoreTrick(G, ctx) {
     };
     
     //go to next trick
+    G.hand.nexttoplay = nexttolead
     ctx.events.endPhase();
 }
 
@@ -490,6 +491,7 @@ export const TicTacToe = {
           ranktrumpled: []
           },
       hand: {
+        nexttoplay: 0,
         bidding: {
         0: [],
         1: [],
@@ -558,6 +560,7 @@ export const TicTacToe = {
       },
       onEnd: (G, ctx) => {
         G.hand.declarer = G.hand.highest_bidder_yet
+        G.hand.nexttoplay = (parseInt(G.hand.declarer) + 1) % ctx.numPlayers
         //determine declaring partnership
         if (G.hand.declarer === '0' || G.hand.declarer == '2') {
           G.hand.declaringpartnership = 0
@@ -620,7 +623,9 @@ export const TicTacToe = {
         order: {
         // Get the initial value of playOrderPos.
         // This is called at the beginning of the phase.
-        first: (G, ctx) => (parseInt(G.hand.declarer) + 1) % ctx.numPlayers,
+   //     first: (G, ctx) => (parseInt(G.hand.declarer) + 1) % ctx.numPlayers,
+        first: (G, ctx) => parseInt(G.hand.nexttoplay),
+
         // Get the next value of playOrderPos.
         // This is called at the end of each turn.
         // The phase ends if this returns undefined.
