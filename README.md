@@ -4,24 +4,20 @@
 - [x] Scoring
 - [x] 30 for 60
 - [x] No pegging past 100
-<<<<<<< HEAD
-- [ ] Use suit symbols instead of H,D,C,S
-- [ ] UI: Bidding
-- [ ] UI: Declaration
-=======
+- [x] Use suit symbols instead of H,D,C,S
 - [x] UI: Bidding
 - [x] UI: Declaration
->>>>>>> 96a5ab2064817dfa64e094349d92072738cf9645
-- [ ] UI: Discard
+- [x] UI: Discard
+- [x] UI: Kitty
+- [x] Move validation
+- [x] Validate suit declaration
 - [ ] UI: Trick scoring
 - [ ] UI: Hand scoring
-- [x] UI: Kitty
-- [ ] Automatic loss if you go 25 without the 5
-- [x] Move validation
-- [ ] Hide hand secrets
-- [ ] Validate shuffling
 - [ ] Multiplayer clients
-- [ ] Fish suit names
+- [ ] Hide hand secrets
+- [ ] Automatic loss if you go 25 without the 5
 - [ ] Game lobby
 - [ ] Deployment to Heroku
-- [x] Validate suit declaration
+- [ ] Validate shuffling
+- [ ] Fish suit names
+
