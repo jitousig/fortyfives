@@ -97,9 +97,15 @@ export const MoveValidate = {
 
   discard: (G, ctx, cardsToDiscard) => {
   const p = ctx.currentPlayer;
-  if (!cardsToDiscard.every(v => G.players[p].cards.includes(v))) {
-    return result(false, "You can only discard cards in your hand!")
+  const l = cardsToDiscard.length
+  let cards = G.players[p].cards.slice();
+
+  for (let i = 0; i < l; i++) {
+    if (cards.filter((card) => card.id === cardsToDiscard[i]).length != 1) {
+      return result(false, "You can only discard cards in your hand")
+    }
   }
+
   return result(true, "ok")
   },
 
