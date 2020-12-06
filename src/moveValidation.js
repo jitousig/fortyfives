@@ -128,6 +128,9 @@ export const MoveValidate = {
   else if (!['Hearts', 'Diamonds', 'Spades', 'Clubs'].includes(suit)) {
     return result(false, "That's not a valid suit")
   }
+  else {
+    return result(true, "ok")
+  }
   }
   // takeOne: (G, ctx, id) => {
   //   if (typeof id !== "number") {
