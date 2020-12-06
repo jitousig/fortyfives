@@ -1,10 +1,31 @@
 import { Client } from 'boardgame.io/client';
+import { SocketIO } from 'boardgame.io/multiplayer'
 import { TicTacToe } from './Game';
 
+const { protocol, hostname, port } = window.location;
+const server = `${protocol}//${hostname}:${port}`;
+
+function SplashScreen(rootElement) {
+  return new Promise(resolve => {
+    const createButton = playerID => {
+      const button = document.createElement('button');
+      button.textContent = 'Player ' + playerID;
+      button.onclick = () => resolve(playerID);
+      rootElement.append(button);
+    };
+    rootElement.innerHTML = ` <p>Play as</p>`;
+    const playerIDs = ['0', '1', '2', '3'];
+    playerIDs.forEach(createButton);
+  });
+}
+
 class TicTacToeClient {
-      constructor(rootElement) {
-              this.client = Client({ game: TicTacToe,
-numPlayers: 4 });
+      constructor(rootElement, { playerID } = {}) {
+              this.client = Client({ 
+                game: TicTacToe,
+                multiplayer: SocketIO({ server }),
+                playerID,
+                numPlayers: 4 });
               this.client.start();
               this.rootElement = rootElement;
               this.createBoard();
@@ -50,7 +71,7 @@ numPlayers: 4 });
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
-
+        <h3>Player ${this.client.playerID}</h3>
         <p class="dealer"></p>
         <p class="currentphase"></p>
         <p class="currentplayer"></p>
@@ -255,6 +276,7 @@ numPlayers: 4 });
       
 
       update(state) {
+        if (state === null) return;
       // Get all the board cells.
       const cards = this.rootElement.querySelectorAll('.card');
       // Update cells to display the values in game state.
@@ -262,9 +284,10 @@ numPlayers: 4 });
         const cellId = parseInt(card.dataset.cardid);
         const playerId = parseInt(card.dataset.playerid);
       let cellValue = ""
+      if (parseInt(this.client.playerID) === playerId) {
         if (cellId <= state.G.players[playerId].cards.length -1){
           cellValue = state.G.players[playerId].cards[cellId].id;
-        }
+        }}
         card.textContent = cellValue !== null ? cellValue : '';
       });
       // Get the gameover message element.
@@ -303,9 +326,9 @@ numPlayers: 4 });
       kittycards.forEach(kittycard => {
         const kittycardid = parseInt(kittycard.dataset.kittycardid);
         var cellValue = ""
-        if (state.G.hand.kitty.length === 3){
-          cellValue = state.G.hand.kitty[kittycardid].id;
-        }
+   /*     if (state.G.secret.kitty.length === 3){
+          cellValue = state.G.secret.kitty[kittycardid].id;
+        }*/
    //     board.textContent = playerId !== null ? playerId : '';
         
         kittycard.textContent = cellValue !== null ? cellValue : '';
@@ -326,5 +349,25 @@ numPlayers: 4 });
     }
 }
 
+//const appElement = document.getElementById('app');
+//const app = new TicTacToeClient(appElement);
+
+
+/*const appElement = document.getElementById('app');
+const playerIDs = ['0', '1','2','3'];
+const clients = playerIDs.map(playerID => {
+  const rootElement = document.createElement('div');
+  appElement.append(rootElement);
+  return new TicTacToeClient(rootElement, { playerID });
+}); */
+
+class App {
+  constructor(rootElement) {
+    SplashScreen(rootElement).then(playerID => {
+      this.client = new TicTacToeClient(rootElement, { playerID });
+    });
+  }
+}
+
 const appElement = document.getElementById('app');
-const app = new TicTacToeClient(appElement);
+const app = new App(appElement);

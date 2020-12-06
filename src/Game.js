@@ -7,6 +7,7 @@ import {
 import { TurnOrder } from 'boardgame.io/core';
 import { GAME_NAME } from "../config.js";
 import { MoveValidate } from "./moveValidation";
+import { PlayerView } from 'boardgame.io/core';
 
 //Defining some Game constants here
 let DECK_CONTENTS = {};
@@ -474,6 +475,9 @@ export const TicTacToe = {
             1: 0 //players 1 and 3
           },
       dealer: 0,
+      secret: {
+        kitty: []
+      },
       under_the_gun: 1, //player to the left of the dealer
       board: [],
       chat: [],
@@ -502,7 +506,7 @@ export const TicTacToe = {
           },
       hand: {
         nexttoplay: 0,
-        kitty: [],
+    //    kitty: [],
         bidding: {
         0: [],
         1: [],
@@ -542,13 +546,14 @@ export const TicTacToe = {
   //  start.deckSize = start.deck.length;
     return start;
   },
-  //playerView: PlayerView.STRIP_SECRETS,
+  playerView: PlayerView.STRIP_SECRETS,
   phases: {
     bid: {
       onBegin: (G, ctx) => {
+        G.secret = {kitty: []}
         G.hand = {
         nexttoplay: 0,
-        kitty: [],
+     //   kitty: [],
         bidding: {
         0: [],
         1: [],
@@ -577,7 +582,7 @@ export const TicTacToe = {
           G.players[3].cards.push(G.deck.pop());
         }
         for (let i = 0; i < 3; i++) {
-          G.hand.kitty.push(G.deck.pop());
+          G.secret.kitty.push(G.deck.pop());
         }
       },
       moves: { Bid },
@@ -637,7 +642,7 @@ export const TicTacToe = {
       },
       onEnd: (G, ctx) => {
         for (let i = 0; i < 3; i++) {
-          G.players[G.hand.declarer].cards.push(G.hand.kitty.pop())
+          G.players[G.hand.declarer].cards.push(G.secret.kitty.pop())
         }
       }
     },
