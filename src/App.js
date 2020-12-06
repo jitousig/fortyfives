@@ -18,7 +18,7 @@ numPlayers: 4 });
           const hand = [];
           for (let i = 0; i < 4; i++) {
             const cards = [];
-            for (let j = 0; j < 5; j++) {
+            for (let j = 0; j < 8; j++) {
               const cardid = j;
               const playerid = i
               cards.push(`<td class="card" data-cardid="${cardid}" data-playerid="${playerid}"></td>`);
