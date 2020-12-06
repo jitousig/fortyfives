@@ -322,6 +322,8 @@ function playCard(G, ctx, id) {
 }
 
 function declareSuit(G, ctx, suit) {
+  const validDeclareSuit = MoveValidate.declareSuit(G, ctx, suit)
+  if (!(validDeclareSuit.valid)) {return Error(validDeclareSuit.message)}
   G.hand.trumpsuit = suit
   ctx.events.endPhase()
 }
