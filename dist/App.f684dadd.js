@@ -18334,7 +18334,7 @@ const TicTacToe = {
         Bid
       },
       endIf: G => isPass(G.hand.bidding[0]) + isPass(G.hand.bidding[1]) + isPass(G.hand.bidding[2]) + isPass(G.hand.bidding[3]) === 3,
-      //    start: true,
+      start: true,
       next: 'declare',
       turn: {
         order: {
@@ -18418,7 +18418,7 @@ const TicTacToe = {
       }
     },
     play: {
-      start: true,
+      //    start: true,
       moves: {
         playCard
       },
@@ -18581,11 +18581,18 @@ class TicTacToeClient {
     for (let i = 0; i < 4; i++) {
       const playerid = i;
       board.push("<td class=\"board\" data-cardid=\"\" data-playerid=\"".concat(playerid, "\"></td>"));
+    }
+
+    const bids = [];
+
+    for (let i = 0; i < 4; i++) {
+      const playerid = i;
+      board.push("<td class=\"bid\" data-playerid=\"".concat(playerid, "\"></td>"));
     } // Add the HTML to our app <div>.
     // We’ll use the empty <p> to display the game winner later.
 
 
-    this.rootElement.innerHTML = "\n        <table>".concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n        <p class=\"score\"></p>\n      ");
+    this.rootElement.innerHTML = "\n<form> \n  <p>Please select your bid:</p>\n  <div>\n    <input type=\"radio\" id=\"bidChoice1\"\n           name=\"bid\" value=\"pass\">\n    <label for=\"bidChoice1\">Pass</label>\n    <input type=\"radio\" id=\"bidChoice2\"\n           name=\"bid\" value=\"20\">\n    <label for=\"bidChoice2\">20</label>\n    <input type=\"radio\" id=\"bidChoice3\"\n           name=\"bid\" value=\"25\">\n    <label for=\"bidChoice3\">25</label>\n    <input type=\"radio\" id=\"bidChoice4\"\n           name=\"bid\" value=\"30\">\n    <label for=\"bidChoice4\">30</label>\n        <input type=\"radio\" id=\"bidChoice5\"\n           name=\"bid\" value=\"hold\">\n    <label for=\"bidChoice5\">Hold</label>\n  </div>\n  <div>\n    <button type=\"submit\">Submit</button>\n  </div>\n</form>\n        <table>".concat(bids.join(''), "</table>\n        <table>").concat(hand.join(''), "</table>\n        <table>").concat(board.join(''), "</table>\n        <p class=\"currentplayer\"></p>\n        <p class=\"score\"></p>\n      ");
   }
 
   attachListeners() {
@@ -18602,6 +18609,23 @@ class TicTacToeClient {
     cards.forEach(card => {
       card.onclick = handleCellClick;
     });
+    var form = this.rootElement.querySelector("form"); //  var log = document.querySelector("#log");
+
+    function logSubmit(event) {
+      console.log("I was triggered");
+      var data = new FormData(form);
+      var output = ""; //      console.log(data)
+
+      for (const entry of data) {
+        output = output + entry[0] + "=" + entry[1] + "\r";
+        output = entry[1];
+      }
+
+      ;
+      console.log(output); //      this.client.moves.Bid(20)
+    }
+
+    form.addEventListener('submit', logSubmit);
   }
 
   update(state) {
@@ -18638,9 +18662,16 @@ class TicTacToeClient {
 
       board.textContent = cellValue !== null ? cellValue : '';
     });
+    const bids = this.rootElement.querySelectorAll('.bid'); // Update cells to display the values in game state.
+
+    bids.forEach(bid => {
+      const playerId = parseInt(bid.dataset.playerid);
+      const cellValue = state.G.hand.bidding[playerId]; //     board.textContent = playerId !== null ? playerId : '';
+
+      bid.textContent = cellValue !== null ? cellValue : '';
+    });
     const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer'); // Update the element to show a winner if any.
 
-    console.log(messageCurrentPlayer);
     messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer;
     const messagecurrentscore = this.rootElement.querySelector('.score');
     messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1];

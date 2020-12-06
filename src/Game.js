@@ -537,7 +537,7 @@ export const TicTacToe = {
         isPass(G.hand.bidding[1]) + 
         isPass(G.hand.bidding[2]) + 
         isPass(G.hand.bidding[3]) === 3),
-  //    start: true,
+      start: true,
       next: 'declare',
       turn: {
         order: {
@@ -616,7 +616,7 @@ export const TicTacToe = {
       }
     },
     play: {
-      start: true,
+  //    start: true,
       moves: { playCard },
       next: 'trickscoring',
       turn: {

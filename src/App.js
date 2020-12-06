@@ -29,10 +29,40 @@ numPlayers: 4 });
             const playerid = i
             board.push(`<td class="board" data-cardid="" data-playerid="${playerid}"></td>`)
           }
+          
+          const bids = []
+          for (let i=0; i < 4; i++) {
+            const playerid = i
+            board.push(`<td class="bid" data-playerid="${playerid}"></td>`)
+          }
 
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
+<form> 
+  <p>Please select your bid:</p>
+  <div>
+    <input type="radio" id="bidChoice1"
+           name="bid" value="pass">
+    <label for="bidChoice1">Pass</label>
+    <input type="radio" id="bidChoice2"
+           name="bid" value="20">
+    <label for="bidChoice2">20</label>
+    <input type="radio" id="bidChoice3"
+           name="bid" value="25">
+    <label for="bidChoice3">25</label>
+    <input type="radio" id="bidChoice4"
+           name="bid" value="30">
+    <label for="bidChoice4">30</label>
+        <input type="radio" id="bidChoice5"
+           name="bid" value="hold">
+    <label for="bidChoice5">Hold</label>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
+        <table>${bids.join('')}</table>
         <table>${hand.join('')}</table>
         <table>${board.join('')}</table>
         <p class="currentplayer"></p>
@@ -53,6 +83,26 @@ numPlayers: 4 });
       cards.forEach(card => {
         card.onclick = handleCellClick;
       });
+      
+      var form = this.rootElement.querySelector("form");
+    //  var log = document.querySelector("#log");
+      
+      function logSubmit(event) {
+        console.log("I was triggered")
+        var data = new FormData(form);
+        var output = "";
+  //      console.log(data)
+        for (const entry of data) {
+          output = output + entry[0] + "=" + entry[1] + "\r";
+          output = entry[1]
+          
+        };
+        console.log(output)
+  //      this.client.moves.Bid(20)
+      }
+ 
+     form.addEventListener('submit', logSubmit);
+
       }
 
       update(state) {
@@ -88,10 +138,21 @@ numPlayers: 4 });
         
         board.textContent = cellValue !== null ? cellValue : '';
       });
+      
+      const bids = this.rootElement.querySelectorAll('.bid');
+      // Update cells to display the values in game state.
+      bids.forEach(bid => {
+        const playerId = parseInt(bid.dataset.playerid);
+        const cellValue = state.G.hand.bidding[playerId];
+   //     board.textContent = playerId !== null ? playerId : '';
+        
+        bid.textContent = cellValue !== null ? cellValue : '';
+      });
+      
       const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer');
       // Update the element to show a winner if any.
-      console.log(messageCurrentPlayer)
       messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer
+      
       const messagecurrentscore = this.rootElement.querySelector('.score');
       messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1]
     }
