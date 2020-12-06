@@ -134,6 +134,7 @@ function scoreTrick(G, ctx) {
 
 function scoreHand(G, ctx) {
      //5 points for highest trump
+     console.log("scoring highest trump")
       if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
         G.hand.score[0] += 5
       } else {
@@ -144,6 +145,8 @@ function scoreHand(G, ctx) {
       //check if someone went 25 without the 5
 
       //score declaring partnership
+      console.log("scoring declaring partnership")
+
       //check if the declaring partnership didn't make their bid
       if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
         G.score[G.hand.declaringpartnership] -= G.hand.highest_bid_value_yet
@@ -156,12 +159,15 @@ function scoreHand(G, ctx) {
       }
 
       //score defending partnership
+      console.log("scoring defending partnership")
+
       if (G.score[G.hand.defendingpartnership] < 100) {
         G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership]
       }
       //deal a new hand
+      console.log("dealing a new hand")
       G.dealer = (G.dealer + 1) % ctx.numPlayers
-      G.under_the_gun = (G.under_the + 1) % ctx.numPlayers
+      G.under_the_gun = (G.under_the_gun + 1) % ctx.numPlayers
       ctx.events.endPhase()
 }
 
@@ -522,7 +528,7 @@ export const TicTacToe = {
 
     start.deck = shuffleDeck(std_45s_deck)
     // Deal 5 cards in alternating order to each player
-    for (let i = 0; i < 5; i++) {
+ /*   for (let i = 0; i < 5; i++) {
       start.players[0].cards.push(start.deck.pop());
       start.players[1].cards.push(start.deck.pop());
       start.players[2].cards.push(start.deck.pop());
@@ -530,7 +536,7 @@ export const TicTacToe = {
     }
     for (let i = 0; i < 3; i++) {
       start.hand.kitty.push(start.deck.pop());
-    }
+    } */
     // Adding deckSize so that the Deck can be stripped in the future
     // deckSize will get updated after turn onEnd
   //  start.deckSize = start.deck.length;
@@ -539,6 +545,41 @@ export const TicTacToe = {
   //playerView: PlayerView.STRIP_SECRETS,
   phases: {
     bid: {
+      onBegin: (G, ctx) => {
+        G.hand = {
+        nexttoplay: 0,
+        kitty: [],
+        bidding: {
+        0: [],
+        1: [],
+        2: [],
+        3: []
+      },
+        declarer: "0",
+        declaringpartnership: [],
+        defendingpartnership: [],
+        score: {
+            0: 0, //northsouth
+            1: 0 //eastwest
+          },
+          highest_bid_yet: [],
+          highest_bid_value_yet: [],
+          highest_bidder_yet: [],
+          trumpsuit: [],
+          highest_trump_yet: [],
+          highest_trump_yet_player: []
+      }
+      G.deck = shuffleDeck(std_45s_deck)
+        for (let i = 0; i < 5; i++) {
+          G.players[0].cards.push(G.deck.pop());
+          G.players[1].cards.push(G.deck.pop());
+          G.players[2].cards.push(G.deck.pop());
+          G.players[3].cards.push(G.deck.pop());
+        }
+        for (let i = 0; i < 3; i++) {
+          G.hand.kitty.push(G.deck.pop());
+        }
+      },
       moves: { Bid },
       endIf: G => (
         isPass(G.hand.bidding[0]) +
@@ -681,8 +722,14 @@ export const TicTacToe = {
     },
     handscoring: {
       // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
+      onEnd: (G, ctx) => {G.hand.bidding = {
+        0: [],
+        1: [],
+        2: [],
+        3: []
+      }},
       moves: { scoreHand },
-      next: 'bi\u2662',
+      next: 'bid',
        /* turn: {
           order: {
       // Get the initial value of playOrderPos.

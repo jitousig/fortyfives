@@ -12,7 +12,9 @@
 - [x] Move validation
 - [x] Validate suit declaration
 - [x] UI: Trick scoring
-- [ ] UI: Hand scoring
+- [x] UI: Hand scoring
+- [ ] Bug: Ace of hearts not treated as trump when trump is lead (incorrect error of: you have to play trump)
+- [x] Bug: Declare phase comes after hand scoring?
 - [ ] Multiplayer clients
 - [ ] Hide hand secrets
 - [ ] Automatic loss if you go 25 without the 5

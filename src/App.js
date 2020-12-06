@@ -158,6 +158,13 @@ numPlayers: 4 });
         handleScoreTrickClick()
       });
       
+      var handleScoreHandClick = event => {
+        this.client.moves.scoreHand()
+      };
+      
+      this.rootElement.querySelector("#ScoreHand").addEventListener("click", function() {
+        handleScoreHandClick()
+      });
       
       const handleCellClick = event => {
         const id = event.target.textContent;
