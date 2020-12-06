@@ -4,6 +4,7 @@
 - [x] Scoring
 - [x] 30 for 60
 - [x] No pegging past 100
+- [ ] Use suit symbols instead of H,D,C,S
 - [ ] UI: Bidding
 - [ ] UI: Declaration
 - [ ] UI: Discard

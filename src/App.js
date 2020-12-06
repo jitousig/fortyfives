@@ -8,6 +8,7 @@ numPlayers: 4 });
               this.client.start();
               this.rootElement = rootElement;
               this.createBoard();
+              this.globaldiscards = [];
               this.attachListeners();
               this.client.subscribe(state => this.update(state));
                     }
@@ -42,6 +43,9 @@ numPlayers: 4 });
             const kittycardid = i
             kitty.push(`<td class="kittycard" data-kittycardid="${kittycardid}"></td>`)
           }
+          
+         // var discards =[]
+          
 
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
@@ -101,19 +105,61 @@ numPlayers: 4 });
         <table>${kitty.join('')}</table>
         <table>${hand.join('')}</table>
         <br>
+        <p class="discards"></p>
+        <button type="button" id="ResetDiscardBtn">Reset Discard List</button>
+        <button type="button" id="DiscardBtn">Discard</button>
         <table>${board.join('')}</table>
 
         <p class="score"></p>
       `;
+      var messagediscards = this.rootElement.querySelector('.discards');
+      messagediscards.textContent = "Cards to discard:"
       }
 
       attachListeners() {
       // This event handler will read the cell id from a cell’s
       // `data-id` attribute and make the `clickCell` move.
+      
+      var handleDiscardClick = event => {
+    //    const id = event.target.textContent;
+        var discardlist = this.globaldiscards
+        console.log(discardlist)
+        this.globaldiscards = []
+        const messagediscards = this.rootElement.querySelector('.discards');
+        messagediscards.textContent = "Cards to discard:" + this.globaldiscards
+        this.client.moves.discard(discardlist);
+      };
+      
+      var handleResetDiscardClick = event => {
+    //    const id = event.target.textContent;
+        this.globaldiscards = []
+        const messagediscards = this.rootElement.querySelector('.discards');
+        messagediscards.textContent = "Cards to discard:" + this.globaldiscards
+      };
+      
+      this.rootElement.querySelector("#DiscardBtn").addEventListener("click", function() {
+        console.log("discard now")
+        handleDiscardClick()
+      });
+      
+      this.rootElement.querySelector("#ResetDiscardBtn").addEventListener("click", function() {
+        console.log("reset discard now")
+        handleResetDiscardClick()
+      });
+      
       const handleCellClick = event => {
         const id = event.target.textContent;
-        console.log(id)
+        
+        const state = this.client.getState()
+        if (state.ctx.phase === "draw") {
+          console.log(id)
+          this.globaldiscards.push(id)
+          const messagediscards = this.rootElement.querySelector('.discards');
+          messagediscards.textContent = "Cards to discard:" + this.globaldiscards
+        }
+        if (state.ctx.phase === "play"){
         this.client.moves.playCard(id);
+        }
       };
       // Attach the event listener to each of the board cells.
       const cards = this.rootElement.querySelectorAll('.card');
