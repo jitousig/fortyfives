@@ -322,6 +322,8 @@ function playCard(G, ctx, id) {
 }
 
 function declareSuit(G, ctx, suit) {
+  const validDeclareSuit = MoveValidate.declareSuit(G, ctx, suit)
+  if (!(validDeclareSuit.valid)) {return Error(validDeclareSuit.message)}
   G.hand.trumpsuit = suit
   ctx.events.endPhase()
 }
@@ -334,7 +336,7 @@ function discard(G, ctx, cardsToDiscard){
   let cards = G.players[p].cards.slice();
   let cardsToKeep = cards.filter((card) => !cardsToDiscard.includes(card.id));
   G.players[p].cards = cardsToKeep;
-  for (let i = 0; i < l; i++) {
+  while (G.players[p].cards.length < 5) {
       G.players[p].cards.push(G.deck.pop());
     }
     ctx.events.endTurn()
@@ -626,7 +628,7 @@ export const TicTacToe = {
         }
       }
     },
-    
+
     play: {
       //start: true,
       moves: { playCard },
