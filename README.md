@@ -11,7 +11,7 @@
 - [ ] UI: Hand scoring
 - [ ] UI: Kitty
 - [ ] Automatic loss if you go 25 without the 5
-- [ ] Move validation
+- [x] Move validation
 - [ ] Hide hand secrets
 - [ ] Validate shuffling
 - [ ] UI
