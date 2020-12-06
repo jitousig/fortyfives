@@ -59,11 +59,11 @@ class TicTacToeClient {
             bids.push(`<td class="bid" data-playerid="${playerid}"></td>`)
           }
           
-          const kitty = []
+   /*       const kitty = []
           for (let i=0; i < 3; i++) {
             const kittycardid = i
             kitty.push(`<td class="kittycard" data-kittycardid="${kittycardid}"></td>`)
-          }
+          } */
           
          // var discards =[]
           
@@ -123,7 +123,7 @@ class TicTacToeClient {
   </div>
 </form>
         
-        <table>${kitty.join('')}</table>
+
         <table>${hand.join('')}</table>
         <br>
         <p class="discards"></p>
@@ -321,7 +321,7 @@ class TicTacToeClient {
         bid.textContent = cellValue !== null ? cellValue : '';
       });
       
-      const kittycards = this.rootElement.querySelectorAll('.kittycard');
+  /*    const kittycards = this.rootElement.querySelectorAll('.kittycard');
       // Update cells to display the values in game state.
       kittycards.forEach(kittycard => {
         const kittycardid = parseInt(kittycard.dataset.kittycardid);
@@ -331,8 +331,8 @@ class TicTacToeClient {
         }*/
    //     board.textContent = playerId !== null ? playerId : '';
         
-        kittycard.textContent = cellValue !== null ? cellValue : '';
-      });
+  //      kittycard.textContent = cellValue !== null ? cellValue : '';
+ //     }); 
       
       const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer');
       // Update the element to show a winner if any.
