@@ -9,6 +9,7 @@
 - [ ] UI: Discard
 - [ ] UI: Trick scoring
 - [ ] UI: Hand scoring
+- [ ] UI: Kitty
 - [ ] Automatic loss if you go 25 without the 5
 - [ ] Move validation
 - [ ] Hide hand secrets
@@ -18,4 +19,4 @@
 - [ ] Fish suit names
 - [ ] Game lobby
 - [ ] Deployment to Heroku
-- [ ] Validate suit declaration
+- [x] Validate suit declaration
