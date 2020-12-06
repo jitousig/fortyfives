@@ -123,6 +123,7 @@ class TicTacToeClient {
   </div>
 </form>
         
+        <p class="trumpsuit"></p>
 
         <table>${hand.join('')}</table>
         <br>
@@ -346,6 +347,9 @@ class TicTacToeClient {
       
       const messagedealer = this.rootElement.querySelector('.dealer');
       messagedealer.textContent = "The dealer is player " + state.G.dealer
+      
+      const messagetrump = this.rootElement.querySelector('.trumpsuit');
+      messagetrump.textContent = "The trump suit is " + state.G.hand.trumpsuit
     }
 }
 
