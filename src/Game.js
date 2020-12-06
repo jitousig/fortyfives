@@ -32,6 +32,14 @@ const isPass = (bid) => {
   }
 }
 
+const isBid = (bid) => {
+  if (bid === 20 || bid === 25 || bid === 30 || bid === "Hold") {
+    return 1
+  } else {
+    return 0
+  }
+}
+
 const shuffleDeck = (deck) => {
   for (var i = deck.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
@@ -589,10 +597,14 @@ export const TicTacToe = {
       },
       moves: { Bid },
       endIf: G => (
-        isPass(G.hand.bidding[0]) +
+        (isPass(G.hand.bidding[0]) +
         isPass(G.hand.bidding[1]) +
         isPass(G.hand.bidding[2]) +
-        isPass(G.hand.bidding[3]) === 3),
+        isPass(G.hand.bidding[3]) === 3) &&
+        (isBid(G.hand.bidding[0]) +
+        isBid(G.hand.bidding[1]) +
+        isBid(G.hand.bidding[2]) +
+        isBid(G.hand.bidding[3]) >0)),
       start: true,
       next: 'declare',
       turn: {
