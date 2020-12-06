@@ -1,15 +1,15 @@
 ### Install instructions
 Clone this repo, then install the following npm dependencies:
 
-- npm install boardgame.io
-- npm install --save-dev parcel-bundler
-- npm install esm
+* npm install boardgame.io
+* npm install --save-dev parcel-bundler
+* npm install esm
 
 ### How to run
 
 For the multiplayer version, run the following commands in separate terminals:
-- npm run serve
-- npm start
+* npm run serve
+* npm start
 
 Open 4 browsers windows to localhost:1234
 
