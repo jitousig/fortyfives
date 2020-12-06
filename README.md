@@ -1,3 +1,15 @@
+### Install instructions
+
+-npm install esm
+
+### How to run
+
+For the multiplayer version:
+-In one terminal, run: npm run serve
+-In one terminal, run: npm start
+
+Open 4 browsers windows to localhost:1234
+
 ### TO DO
 
 - [x] Bidding
@@ -22,4 +34,5 @@
 - [ ] Deployment to Heroku
 - [ ] Validate shuffling
 - [ ] Fish suit names
+
 

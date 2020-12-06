@@ -1,12 +1,28 @@
 import { Client } from 'boardgame.io/client';
-import { Local } from 'boardgame.io/multiplayer'
+import { SocketIO } from 'boardgame.io/multiplayer'
 import { TicTacToe } from './Game';
 
+function SplashScreen(rootElement) {
+  return new Promise(resolve => {
+    const createButton = playerID => {
+      const button = document.createElement('button');
+      button.textContent = 'Player ' + playerID;
+      button.onclick = () => resolve(playerID);
+      rootElement.append(button);
+    };
+    rootElement.innerHTML = ` <p>Play as</p>`;
+    const playerIDs = ['0', '1', '2', '3'];
+    playerIDs.forEach(createButton);
+  });
+}
+
 class TicTacToeClient {
-      constructor(rootElement) {
-              this.client = Client({ game: TicTacToe,
-              multiplayer: Local(),
-numPlayers: 4 });
+      constructor(rootElement, { playerID } = {}) {
+              this.client = Client({ 
+                game: TicTacToe,
+                multiplayer: SocketIO({ server: 'localhost:8000' }),
+                playerID,
+                numPlayers: 4 });
               this.client.start();
               this.rootElement = rootElement;
               this.createBoard();
@@ -52,7 +68,7 @@ numPlayers: 4 });
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
       this.rootElement.innerHTML = `
-
+        <h3>Player ${this.client.playerID}</h3>
         <p class="dealer"></p>
         <p class="currentphase"></p>
         <p class="currentplayer"></p>
@@ -257,6 +273,7 @@ numPlayers: 4 });
       
 
       update(state) {
+        if (state === null) return;
       // Get all the board cells.
       const cards = this.rootElement.querySelectorAll('.card');
       // Update cells to display the values in game state.
@@ -332,10 +349,21 @@ numPlayers: 4 });
 //const app = new TicTacToeClient(appElement);
 
 
-const appElement = document.getElementById('app');
+/*const appElement = document.getElementById('app');
 const playerIDs = ['0', '1','2','3'];
 const clients = playerIDs.map(playerID => {
   const rootElement = document.createElement('div');
   appElement.append(rootElement);
   return new TicTacToeClient(rootElement, { playerID });
-});
+}); */
+
+class App {
+  constructor(rootElement) {
+    SplashScreen(rootElement).then(playerID => {
+      this.client = new TicTacToeClient(rootElement, { playerID });
+    });
+  }
+}
+
+const appElement = document.getElementById('app');
+const app = new App(appElement);
