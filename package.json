@@ -1,12 +1,13 @@
 {
   "scripts": {
     "start": "parcel index.html --open",
-    "serve": "node -r esm src/server.js"
+    "serve": "node -r esm server.js"
   },
   "browserslist": "> 0.4% and not ie 11",
   "dependencies": {
     "boardgame.io": "^0.42.0",
-    "esm": "^3.2.25"
+    "esm": "^3.2.25",
+    "koa-static": "^5.0.0"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"

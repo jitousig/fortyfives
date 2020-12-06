@@ -2,6 +2,9 @@ import { Client } from 'boardgame.io/client';
 import { SocketIO } from 'boardgame.io/multiplayer'
 import { TicTacToe } from './Game';
 
+const { protocol, hostname, port } = window.location;
+const server = `${protocol}//${hostname}:${port}`;
+
 function SplashScreen(rootElement) {
   return new Promise(resolve => {
     const createButton = playerID => {
@@ -20,7 +23,7 @@ class TicTacToeClient {
       constructor(rootElement, { playerID } = {}) {
               this.client = Client({ 
                 game: TicTacToe,
-                multiplayer: SocketIO({ server: 'localhost:8000' }),
+                multiplayer: SocketIO({ server }),
                 playerID,
                 numPlayers: 4 });
               this.client.start();
