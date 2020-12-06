@@ -281,9 +281,10 @@ class TicTacToeClient {
         const cellId = parseInt(card.dataset.cardid);
         const playerId = parseInt(card.dataset.playerid);
       let cellValue = ""
+      if (parseInt(this.client.playerID) === playerId) {
         if (cellId <= state.G.players[playerId].cards.length -1){
           cellValue = state.G.players[playerId].cards[cellId].id;
-        }
+        }}
         card.textContent = cellValue !== null ? cellValue : '';
       });
       // Get the gameover message element.
@@ -322,8 +323,8 @@ class TicTacToeClient {
       kittycards.forEach(kittycard => {
         const kittycardid = parseInt(kittycard.dataset.kittycardid);
         var cellValue = ""
-        if (state.G.hand.kitty.length === 3){
-          cellValue = state.G.hand.kitty[kittycardid].id;
+        if (state.G.secret.kitty.length === 3){
+          cellValue = state.G.secret.kitty[kittycardid].id;
         }
    //     board.textContent = playerId !== null ? playerId : '';
         
