@@ -323,9 +323,9 @@ class TicTacToeClient {
       kittycards.forEach(kittycard => {
         const kittycardid = parseInt(kittycard.dataset.kittycardid);
         var cellValue = ""
-        if (state.G.secret.kitty.length === 3){
+   /*     if (state.G.secret.kitty.length === 3){
           cellValue = state.G.secret.kitty[kittycardid].id;
-        }
+        }*/
    //     board.textContent = playerId !== null ? playerId : '';
         
         kittycard.textContent = cellValue !== null ? cellValue : '';
