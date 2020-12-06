@@ -85,8 +85,8 @@ function Bid(G, ctx,amount) {
   if (amount != "pass") {
     G.hand.highest_bid_yet = amount;
     if (amount != "hold") {
-   G.hand.highest_bid_value_yet = amount 
-  } 
+   G.hand.highest_bid_value_yet = amount
+  }
   G.hand.highest_bidder_yet = ctx.currentPlayer;}
   ctx.events.endTurn()
 }
@@ -98,14 +98,14 @@ function scoreTrick(G, ctx) {
     } else {
       G.trick.winningpartnership = 1;
     }
-  
+
     G.hand.score[G.trick.winningpartnership] += 5;
-    
-    //Check if this was the last trick of the hand 
+
+    //Check if this was the last trick of the hand
     if (G.hand.score[0] + G.hand.score[1] === 25) {
       ctx.events.setPhase("handscoring")
     }
-    
+
     //clear the table for next trick
     G.table = {
       0: [],
@@ -113,10 +113,10 @@ function scoreTrick(G, ctx) {
       2: [],
       3: []
     };
-    
+
     // set nexttolead before clearing trick state
     let nexttolead = G.trick.bestplayerthistrick
-    
+
     G.trick = {
       cards_played: 0,
       bestcardthistrick: [],
@@ -126,7 +126,7 @@ function scoreTrick(G, ctx) {
       trumpled: [],
       ranktrumpled: []
     };
-    
+
     //go to next trick
     G.hand.nexttoplay = nexttolead
     ctx.events.endPhase();
@@ -139,10 +139,10 @@ function scoreHand(G, ctx) {
       } else {
         G.hand.score[1] += 5;
       }
-      
+
       //update the game score
       //check if someone went 25 without the 5
-      
+
       //score declaring partnership
       //check if the declaring partnership didn't make their bid
       if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
@@ -154,7 +154,7 @@ function scoreHand(G, ctx) {
           G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership]
         }
       }
-      
+
       //score defending partnership
       if (G.score[G.hand.defendingpartnership] < 100) {
         G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership]
@@ -209,7 +209,7 @@ function playCard(G, ctx, id) {
   cards = cards.filter((card) => card.id !== cardToPlay.id);
   G.players[p].cards = cards;
   G.table[p] = cardToPlay;
-  
+
   //keep track of highest trump yet
   if(istrump(cardToPlay)) {
     if(G.hand.highest_trump_yet.length === 0) {
@@ -222,16 +222,16 @@ function playCard(G, ctx, id) {
       }
     }
   }
-  
+
   //keep track of suit led and rank if trump (for reneging)
   if (G.trick.cards_played === 0 ) {
     G.trick.suitled = cardToPlay.suit
     G.trick.trumpled = istrump(cardToPlay)
     if (G.trick.trumpled) {G.trick.ranktrumpled = cardToPlay.ranktrump}
   }
-  
+
   G.trick.cards_played++;
-  
+
   //track best card played
   if (G.trick.cards_played === 1) {
     G.trick.bestcardthistrick = cardToPlay;
@@ -243,11 +243,11 @@ function playCard(G, ctx, id) {
     G.trick.bestplayerthistrick = p;
     }
   };
-  
+
   if (G.trick.cards_played === 4) {
     ctx.events.endPhase();
   }
-  
+
   //score the trick
 /*  if (G.trick.cards_played === 4 ) {
     //identify winning partnership
@@ -256,10 +256,10 @@ function playCard(G, ctx, id) {
     } else {
       G.trick.winningpartnership = 1;
     }
-  
+
     G.hand.score[G.trick.winningpartnership] += 5;
-    
-    //Check if this was the last trick of the hand 
+
+    //Check if this was the last trick of the hand
     if (G.hand.score[0] + G.hand.score[1] === 25) {
       //5 points for highest trump
       if (G.hand.highest_trump_yet_player === '0' || G.hand.highest_trump_yet_player === '2') {
@@ -267,10 +267,10 @@ function playCard(G, ctx, id) {
       } else {
         G.hand.score[1] += 5;
       }
-      
+
       //update the game score
       //check if someone went 25 without the 5
-      
+
       //score declaring partnership
       //check if the declaring partnership didn't make their bid
       if (G.hand.score[G.hand.declaringpartnership] < G.hand.highest_bid_value_yet) {
@@ -282,7 +282,7 @@ function playCard(G, ctx, id) {
           G.score[G.hand.declaringpartnership] += G.hand.score[G.hand.declaringpartnership]
         }
       }
-      
+
       //score defending partnership
       if (G.score[G.hand.defendingpartnership] < 100) {
         G.score[G.hand.defendingpartnership] += G.hand.score[G.hand.defendingpartnership]
@@ -292,7 +292,7 @@ function playCard(G, ctx, id) {
       G.under_the_gun = (G.under_the + 1) % ctx.numPlayers
       ctx.events.endPhase()
     }
-    
+
     //clear the table for next trick
     G.table = {
       0: [],
@@ -300,10 +300,10 @@ function playCard(G, ctx, id) {
       2: [],
       3: []
     };
-    
+
     // set nexttolead before clearing trick state
     let nexttolead = G.trick.bestplayerthistrick
-    
+
     G.trick = {
       cards_played: 0,
       bestcardthistrick: [],
@@ -313,11 +313,11 @@ function playCard(G, ctx, id) {
       trumpled: [],
       ranktrumpled: []
     };
-    
+
     //go to next trick
     ctx.events.endTurn({ next: nexttolead });
   }; */
-  
+
   ctx.events.endTurn();
 }
 
@@ -327,6 +327,8 @@ function declareSuit(G, ctx, suit) {
 }
 
 function discard(G, ctx, cardsToDiscard){
+  const validDiscard = MoveValidate.discard(G, ctx, cardsToDiscard)
+  if (!(validDiscard.valid)) {return Error(validDiscard.message)}
   const p = ctx.currentPlayer
   const l = cardsToDiscard.length
   let cards = G.players[p].cards.slice();
@@ -469,8 +471,8 @@ export const TicTacToe = {
       chat: [],
       tokens: {},
       players: {
-        0: { trade_tokens: [], cards: [], T3: 0, T4: 0, T5: 0 },
-        1: { trade_tokens: [], cards: [], T3: 0, T4: 0, T5: 0 },
+        0: { cards: [] },
+        1: { cards: [] },
         2: { cards: [] },
         3: { cards: [] }
       },
@@ -492,6 +494,7 @@ export const TicTacToe = {
           },
       hand: {
         nexttoplay: 0,
+        kitty: [],
         bidding: {
         0: [],
         1: [],
@@ -523,6 +526,9 @@ export const TicTacToe = {
       start.players[2].cards.push(start.deck.pop());
       start.players[3].cards.push(start.deck.pop());
     }
+    for (let i = 0; i < 3; i++) {
+      start.hand.kitty.push(start.deck.pop());
+    }
     // Adding deckSize so that the Deck can be stripped in the future
     // deckSize will get updated after turn onEnd
   //  start.deckSize = start.deck.length;
@@ -533,18 +539,18 @@ export const TicTacToe = {
     bid: {
       moves: { Bid },
       endIf: G => (
-        isPass(G.hand.bidding[0]) + 
-        isPass(G.hand.bidding[1]) + 
-        isPass(G.hand.bidding[2]) + 
+        isPass(G.hand.bidding[0]) +
+        isPass(G.hand.bidding[1]) +
+        isPass(G.hand.bidding[2]) +
         isPass(G.hand.bidding[3]) === 3),
-  //    start: true,
+      start: true,
       next: 'declare',
       turn: {
         order: {
           // Get the initial value of playOrderPos.
           // This is called at the beginning of the phase.
           first: (G, ctx) => G.under_the_gun,
-      
+
           // Get the next value of playOrderPos.
           // This is called at the end of each turn.
           // The phase ends if this returns undefined.
@@ -585,6 +591,11 @@ export const TicTacToe = {
           // The phase ends if this returns undefined.
          // next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers,
         }
+      },
+      onEnd: (G, ctx) => {
+        for (let i = 0; i < 3; i++) {
+          G.players[G.hand.declarer].cards.push(G.hand.kitty.pop())
+        }
       }
     },
     draw: {
@@ -596,15 +607,15 @@ export const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-  
+
       // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-  
+
       }
         } */
-      turn: { 
+      turn: {
         order: {
         first: (G, ctx) => G.under_the_gun,
         next: (G, ctx) => {
@@ -616,7 +627,7 @@ export const TicTacToe = {
       }
     },
     play: {
-      start: true,
+      //start: true,
       moves: { playCard },
       next: 'trickscoring',
       turn: {
@@ -646,15 +657,15 @@ export const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-  
+
       // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-  
+
       }
         } */
-      turn: { 
+      turn: {
         order: {
         first: (G, ctx) => parseInt(G.trick.bestplayerthistrick),
         next: (G, ctx) => {
@@ -674,15 +685,15 @@ export const TicTacToe = {
       // Get the initial value of playOrderPos.
       // This is called at the beginning of the phase.
       first: (G, ctx) => G.under_the_gun,
-  
+
       // Get the next value of playOrderPos.
       // This is called at the end of each turn.
       // The phase ends if this returns undefined.
       next: (G, ctx) => (ctx.playOrderPos + 1) % ctx.numPlayers
-  
+
       }
         } */
-      turn: { 
+      turn: {
         order: {
         first: (G, ctx) => parseInt(G.dealer),
         next: (G, ctx) => {
@@ -712,7 +723,7 @@ export const TicTacToe = {
 /*    if (G.deck.length <= 0) {
       console.log("Ending game since we are out of cards!");
       return getWinner(G);
-    } */ 
+    } */
     /*
     const numResourcesLeft = Object.values(G.tokens).filter((res) => {
       return res.length > 0;
