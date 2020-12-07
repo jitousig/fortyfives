@@ -284,13 +284,17 @@ class TicTacToeClient {
       cards.forEach(card => {
         const cellId = parseInt(card.dataset.cardid);
         const playerId = parseInt(card.dataset.playerid);
-      let cellValue = ""
-      if (parseInt(this.client.playerID) === playerId) {
-        if (cellId <= state.G.players[playerId].cards.length -1){
-          if (state.G.players[playerId].cards[cellId].id){
-          cellValue = state.G.players[playerId].cards[cellId].id;}
-        }}
-        card.textContent = cellValue !== null ? cellValue : '';
+        let cellValue = ""
+     //   if (parseInt(this.client.playerID) === playerId) {
+          if (cellId <= state.G.players[playerId].cards.length -1){
+            //cardid = state.G.players[playerId].cards[cellId].id
+          //  if (cardid){
+       //     cellValue = cardid}
+            let playercards = state.G.players[playerId].cards
+            card.textContent = playercards[cellId] !== null ? playercards[cellId].id : '';
+          }
+    //    }
+        
       });
       // Get the gameover message element.
       //const messageEl = this.rootElement.querySelector('.winner');
