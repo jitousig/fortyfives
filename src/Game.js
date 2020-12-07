@@ -182,7 +182,7 @@ function scoreHand(G, ctx) {
 
 function playCard(G, ctx, id) {
   const istrump = (card) => {
-    if (card.suit === G.hand.trumpsuit || card.id === "AH") {
+    if (card.suit === G.hand.trumpsuit || card.id === "A\u2661") {
       return true
     } else {return false}
   }
