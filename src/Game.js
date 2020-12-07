@@ -97,6 +97,12 @@ function Bid(G, ctx,amount) {
    G.hand.highest_bid_value_yet = amount
   }
   G.hand.highest_bidder_yet = ctx.currentPlayer;}
+  if (isPass(G.hand.bidding[0]) +
+        isPass(G.hand.bidding[1]) +
+        isPass(G.hand.bidding[2]) +
+        isPass(G.hand.bidding[3]) === 4) {
+      ctx.events.setPhase("bid")    
+        }
   ctx.events.endTurn()
 }
 
@@ -477,7 +483,7 @@ const nextCardBetter = (card1, card2) => {
 export const TicTacToe = {
   name: GAME_NAME,
   setup: () => {
-    const deck = std_45s_deck;
+//    var deck = std_45s_deck;
     var start = {
       statusmessage: "Start of game",
       score: {
@@ -498,7 +504,7 @@ export const TicTacToe = {
         2: { cards: [] },
         3: { cards: [] }
       },
-      deck: deck,
+      deck: [],
       table: {
           0: [],
           1: [],
@@ -560,7 +566,13 @@ export const TicTacToe = {
   phases: {
     bid: {
       onBegin: (G, ctx) => {
-        G.secret = {kitty: []}
+        G.secret = {kitty: []},
+        G.players = {
+        0: { cards: [] },
+        1: { cards: [] },
+        2: { cards: [] },
+        3: { cards: [] }
+      },
         G.hand = {
         nexttoplay: 0,
      //   kitty: [],
@@ -584,7 +596,8 @@ export const TicTacToe = {
           highest_trump_yet: [],
           highest_trump_yet_player: []
       }
-      G.deck = shuffleDeck(std_45s_deck)
+      G.deck = std_45s_deck
+      G.deck = shuffleDeck(G.deck)
         for (let i = 0; i < 5; i++) {
           G.players[0].cards.push(G.deck.pop());
           G.players[1].cards.push(G.deck.pop());
