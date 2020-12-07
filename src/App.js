@@ -287,7 +287,8 @@ class TicTacToeClient {
       let cellValue = ""
       if (parseInt(this.client.playerID) === playerId) {
         if (cellId <= state.G.players[playerId].cards.length -1){
-          cellValue = state.G.players[playerId].cards[cellId].id;
+          if (state.G.players[playerId].cards[cellId] !== undefined){
+          cellValue = state.G.players[playerId].cards[cellId].id;}
         }}
         card.textContent = cellValue !== null ? cellValue : '';
       });
