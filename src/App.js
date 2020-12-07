@@ -38,15 +38,15 @@ class TicTacToeClient {
       createBoard() {
           // Create cells in rows for the Tic-Tac-Toe board.
           const hand = [];
-          for (let i = 0; i < 4; i++) {
+      //    for (let i = 0; i < 4; i++) {
             const cards = [];
             for (let j = 0; j < 8; j++) {
               const cardid = j;
-              const playerid = i
+              const playerid = this.client.playerID
               cards.push(`<td class="card" data-cardid="${cardid}" data-playerid="${playerid}"></td>`);
             }
             hand.push(`<tr>${cards.join('')}</tr>`);
-          }
+      //    }
           const board = []
           for (let i=0; i < 4; i++) {
             const playerid = i
@@ -75,7 +75,7 @@ class TicTacToeClient {
         <h3 class="statusmessage"></h3>
 
         <p class="dealer"></p>
-        <p class="currentphase"></p>
+        <p hidden class="currentphase"></p>
         <p class="currentplayer"></p>
         
 <form id="biddingform"> 
@@ -102,8 +102,7 @@ class TicTacToeClient {
   </div>
 </form>
         <table>${bids.join('')}</table>
-        <br>
-        
+
                 <form id="declarationform"> 
   <p>Please select the trump suit:</p>
   <div>
@@ -125,10 +124,9 @@ class TicTacToeClient {
   </div>
 </form>
         
-        <p class="trumpsuit"></p>
+        <p hidden class="trumpsuit"></p>
 
         <table>${hand.join('')}</table>
-        <br>
         <p class="discards"></p>
         <button type="button" id="ResetDiscardBtn">Reset Discard List</button>
         <button type="button" id="DiscardBtn">Discard</button>
@@ -136,7 +134,7 @@ class TicTacToeClient {
         <button type="button" id="ScoreHand">Score Hand</button>
         <table>${board.join('')}</table>
 
-        <p class="score"></p>
+        <p hidden class="score"></p>
       `;
       var messagediscards = this.rootElement.querySelector('.discards');
       messagediscards.textContent = "Cards to discard:"
@@ -339,7 +337,8 @@ class TicTacToeClient {
       
       const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer');
       // Update the element to show a winner if any.
-      messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer
+      messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer +
+      " and the phase is " + state.ctx.phase + "."
       
       const messagecurrentscore = this.rootElement.querySelector('.score');
       messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1]
@@ -348,7 +347,10 @@ class TicTacToeClient {
       messagecurrentphase.textContent = "The phase is " + state.ctx.phase
       
       const messagedealer = this.rootElement.querySelector('.dealer');
-      messagedealer.textContent = "The dealer is player " + state.G.dealer
+      messagedealer.textContent = "The dealer is player " + state.G.dealer +
+      " and the trump suit is " + state.G.hand.trumpsuit + ". The game score is " +
+      state.G.score[0] + " to " + state.G.score[1] + ", and the hand score is " +
+      state.G.hand.score[0] + " to " + state.G.hand.score[1] + "."
       
       const messagetrump = this.rootElement.querySelector('.trumpsuit');
       messagetrump.textContent = "The trump suit is " + state.G.hand.trumpsuit
