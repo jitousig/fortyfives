@@ -33,7 +33,7 @@ const isPass = (bid) => {
 }
 
 const isBid = (bid) => {
-  if (bid === 20 || bid === 25 || bid === 30 || bid === "Hold") {
+  if (bid === 20 || bid === 25 || bid === 30 || bid === "hold") {
     return 1
   } else {
     return 0
