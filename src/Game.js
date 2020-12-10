@@ -540,7 +540,7 @@ export const TicTacToe = {
         2: [],
         3: []
       },
-        declarer: "undefined",
+        declarer: "TBD",
         declaringpartnership: [],
         defendingpartnership: [],
         score: {
@@ -593,7 +593,7 @@ export const TicTacToe = {
         2: [],
         3: []
       },
-        declarer: "0",
+        declarer: "TBD",
         declaringpartnership: [],
         defendingpartnership: [],
         score: {
