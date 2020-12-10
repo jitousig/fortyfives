@@ -354,7 +354,7 @@ class TicTacToeClient {
       messagecurrentphase.textContent = "The phase is " + state.ctx.phase
       
       const messagedealer = this.rootElement.querySelector('.dealer');
-      messagedealer.textContent = "The dealer is player " + state.G.dealer +
+      messagedealer.textContent = "The dealer is player " + state.G.dealer + " ,the declarer is player " + state.G.hand.declarer + 
       " and the trump suit is " + state.G.hand.trumpsuit + ". The game score is " +
       state.G.score[0] + " to " + state.G.score[1] + ", and the hand score is " +
       state.G.hand.score[0] + " to " + state.G.hand.score[1] + "."

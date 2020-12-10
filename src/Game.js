@@ -530,7 +530,7 @@ export const TicTacToe = {
         2: [],
         3: []
       },
-        declarer: "0",
+        declarer: "undefined",
         declaringpartnership: [],
         defendingpartnership: [],
         score: {
@@ -540,7 +540,7 @@ export const TicTacToe = {
           highest_bid_yet: [],
           highest_bid_value_yet: [],
           highest_bidder_yet: [],
-          trumpsuit: [],
+          trumpsuit: "undeclared",
           highest_trump_yet: [],
           highest_trump_yet_player: []
       }
@@ -593,7 +593,7 @@ export const TicTacToe = {
           highest_bid_yet: [],
           highest_bid_value_yet: [],
           highest_bidder_yet: [],
-          trumpsuit: [],
+          trumpsuit: "undeclared",
           highest_trump_yet: [],
           highest_trump_yet_player: []
       }
