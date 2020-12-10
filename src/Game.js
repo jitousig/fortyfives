@@ -339,7 +339,7 @@ function playCard(G, ctx, id) {
     //go to next trick
     ctx.events.endTurn({ next: nexttolead });
   }; */
-
+  G.statusmessage = "Player " + ctx.currentPlayer + " played the " + id
   ctx.events.endTurn();
 }
 
@@ -676,7 +676,7 @@ export const TicTacToe = {
     },
     draw: {
       // onBegin: (G, ctx) =>{ctx.playOrderPos = G.under_the_gun},
-      onEnd: (G, ctx) => {G.statusmessage = ""},
+  //    onEnd: (G, ctx) => {G.statusmessage = ""},
       moves: { discard },
       next: 'play',
        /* turn: {
