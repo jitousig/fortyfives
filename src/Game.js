@@ -361,7 +361,17 @@ function discard(G, ctx, cardsToDiscard){
   while (G.players[p].cards.length < 5) {
       G.players[p].cards.push(G.deck.pop());
     }
-    G.statusmessage = "Player " + p + " discarded " + l + " cards."
+ //   G.statusmessage = "Player " + p + " discarded " + l + " cards."
+ let numcards = 0
+ console.log(p)
+ console.log(G.hand.declarer)
+ console.log(p == parseInt(G.hand.declarer))
+ if (p == parseInt(G.hand.declarer)) {
+   numcards = l - 3
+ } else {
+   numcards = l
+ }
+ G.statusmessage = "Player " + p + " drew " + numcards + " cards."
     ctx.events.endTurn()
 }
 
