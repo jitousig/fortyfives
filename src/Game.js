@@ -375,7 +375,7 @@ G.trick.northsouthscore = 5;
 }; */
 
 const std_45s_deck = [
-  { id: 'A\u2661', ranktrump: 3, suit: "Hearts"},
+  { id: 'A\u2661', ranktrump: 3, suit: "Trump"},
   { id: 'K\u2661', ranktrump: 4, ranknontrump: 1, suit: "Hearts"},
   { id: 'Q\u2661', ranktrump: 5, ranknontrump: 2, suit: "Hearts"},
   { id: 'J\u2661', ranktrump: 2, ranknontrump: 3, suit: "Hearts"},
