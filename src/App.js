@@ -291,8 +291,10 @@ class TicTacToeClient {
           //  if (cardid){
        //     cellValue = cardid}
             let playercards = state.G.players[playerId].cards
-            card.textContent = playercards[cellId] !== null ? playercards[cellId].id : '';
+            cellValue = playercards[cellId] !== null ? playercards[cellId].id : '';            
           }
+            card.textContent = cellValue;
+          
     //    }
         
       });
