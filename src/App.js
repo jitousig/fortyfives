@@ -21,7 +21,7 @@ function SplashScreen(rootElement) {
 
 class TicTacToeClient {
       constructor(rootElement, { playerID } = {}) {
-              this.client = Client({ 
+              this.client = Client({
                 game: TicTacToe,
                 multiplayer: SocketIO({ server }),
                 playerID,
@@ -43,30 +43,45 @@ class TicTacToeClient {
             for (let j = 0; j < 8; j++) {
               const cardid = j;
               const playerid = this.client.playerID
-              cards.push(`<td class="card" data-cardid="${cardid}" data-playerid="${playerid}"></td>`);
+              cards.push(`<td class="card" data-cardid="${cardid}" data-playerid="${playerid}" id="${cardid}"></td>`);  //added id as identifier for html elements/cells
             }
             hand.push(`<tr>${cards.join('')}</tr>`);
       //    }
           const board = []
           for (let i=0; i < 4; i++) {
             const playerid = i
-            board.push(`<td class="board" data-cardid="" data-playerid="${playerid}"></td>`)
+            const boardspaceid = 8 + playerid;
+            board.push(`<td class="board" data-cardid="" data-playerid="${playerid}" id="${boardspaceid}"></td>`)
           }
-          
+
           const bids = []
           for (let i=0; i < 4; i++) {
             const playerid = i
             bids.push(`<td class="bid" data-playerid="${playerid}"></td>`)
           }
-          
+
+          const gamescore = []
+          for (let i=0; i < 2; i++) {
+            const teamid = i
+            const boardspaceid = 12 + teamid;
+            gamescore.push(`<td class="gamescore" data-teamid="${teamid}" id="${boardspaceid}"></td>`)
+          }
+
+          const tricknumber = []
+          for (let i=0; i < 2; i++) {
+            const teamid = i
+            const boardspaceid = 14 + teamid;
+            tricknumber.push(`<td class="tricknumber" data-teamid="${teamid}" id="${boardspaceid}"></td>`)
+          }
+
    /*       const kitty = []
           for (let i=0; i < 3; i++) {
             const kittycardid = i
             kitty.push(`<td class="kittycard" data-kittycardid="${kittycardid}"></td>`)
           } */
-          
+
          // var discards =[]
-          
+
 
       // Add the HTML to our app <div>.
       // We’ll use the empty <p> to display the game winner later.
@@ -77,8 +92,8 @@ class TicTacToeClient {
         <p class="dealer"></p>
         <p hidden class="currentphase"></p>
         <p class="currentplayer"></p>
-        
-<form id="biddingform"> 
+
+<form id="biddingform">
   <p>Please select your bid:</p>
   <div>
     <input type="radio" id="bidChoice1"
@@ -103,7 +118,7 @@ class TicTacToeClient {
 </form>
         <table>${bids.join('')}</table>
 
-                <form id="declarationform"> 
+                <form id="declarationform">
   <p>Please select the trump suit:</p>
   <div>
     <input type="radio" id="suitChoice1"
@@ -123,7 +138,7 @@ class TicTacToeClient {
     <button type="submit">Submit</button>
   </div>
 </form>
-        
+
         <p hidden class="trumpsuit"></p>
 
         <table>${hand.join('')}</table>
@@ -135,6 +150,22 @@ class TicTacToeClient {
         <table>${board.join('')}</table>
 
         <p hidden class="score"></p>
+
+        <p></p>
+        <table>
+          <thead>
+          <tr>
+          <th><div>Game score</div></th>
+          <th><div>Trick score</div></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td><table>${gamescore.join('')}</table></td>
+            <td><table>${tricknumber.join('')}</table></td>
+          </tr>
+          </tbody>
+        </table>
       `;
       var messagediscards = this.rootElement.querySelector('.discards');
       messagediscards.textContent = "Cards to discard:"
@@ -143,7 +174,7 @@ class TicTacToeClient {
       attachListeners() {
       // This event handler will read the cell id from a cell’s
       // `data-id` attribute and make the `clickCell` move.
-      
+
       var handleDiscardClick = event => {
     //    const id = event.target.textContent;
         var discardlist = this.globaldiscards
@@ -153,44 +184,44 @@ class TicTacToeClient {
         messagediscards.textContent = "Cards to discard:" + this.globaldiscards
         this.client.moves.discard(discardlist);
       };
-      
+
       var handleResetDiscardClick = event => {
     //    const id = event.target.textContent;
         this.globaldiscards = []
         const messagediscards = this.rootElement.querySelector('.discards');
         messagediscards.textContent = "Cards to discard:" + this.globaldiscards
       };
-      
+
       this.rootElement.querySelector("#DiscardBtn").addEventListener("click", function() {
         console.log("discard now")
         handleDiscardClick()
       });
-      
+
       this.rootElement.querySelector("#ResetDiscardBtn").addEventListener("click", function() {
         console.log("reset discard now")
         handleResetDiscardClick()
       });
-      
-      
+
+
       var handleScoreTrickClick = event => {
         this.client.moves.scoreTrick()
       };
-      
+
       this.rootElement.querySelector("#ScoreTrick").addEventListener("click", function() {
         handleScoreTrickClick()
       });
-      
+
       var handleScoreHandClick = event => {
         this.client.moves.scoreHand()
       };
-      
+
       this.rootElement.querySelector("#ScoreHand").addEventListener("click", function() {
         handleScoreHandClick()
       });
-      
+
       const handleCellClick = event => {
         const id = event.target.textContent;
-        
+
         const state = this.client.getState()
         if (state.ctx.phase === "draw") {
           console.log(id)
@@ -202,18 +233,18 @@ class TicTacToeClient {
         this.client.moves.playCard(id);
         }
       };
-      
+
       // Attach the event listener to each of the board cells.
       const cards = this.rootElement.querySelectorAll('.card');
       cards.forEach(card => {
         card.onclick = handleCellClick;
       });
-      
+
       var biddingform = this.rootElement.querySelector('#biddingform');
       var declarationform = this.rootElement.querySelector("#declarationform");
 
     //  var log = document.querySelector("#log");
-      
+
       function logSubmit(event) {
         console.log("I was triggered")
         var data = new FormData(form);
@@ -222,12 +253,12 @@ class TicTacToeClient {
         for (const entry of data) {
           output = output + entry[0] + "=" + entry[1] + "\r";
           output = entry[1]
-          
+
         };
         console.log(output)
   //      this.client.moves.Bid(20)
       }
- 
+
  //    form.addEventListener('submit', logSubmit);
   //    event.preventDefault();
       const handleSubmitClick = bidamount => {
@@ -238,11 +269,11 @@ class TicTacToeClient {
         }
         this.client.moves.Bid(bidamount);
       };
-      
+
       const handleDeclareSubmitClick = suitchoice => {
         this.client.moves.declareSuit(suitchoice);
-      }; 
-      
+      };
+
       biddingform.addEventListener("submit", function(event) {
         var data = new FormData(biddingform);
         var output = "";
@@ -270,11 +301,11 @@ class TicTacToeClient {
 //  console.log(suitchoice)
   handleDeclareSubmitClick(suitchoice)
   event.preventDefault();
-}, false); 
-      
+}, false);
+
       }
-      
-      
+
+
 
       update(state) {
         if (state === null) return;
@@ -291,12 +322,13 @@ class TicTacToeClient {
           //  if (cardid){
        //     cellValue = cardid}
             let playercards = state.G.players[playerId].cards
-            cellValue = playercards[cellId] !== null ? playercards[cellId].id : '';            
+            cellValue = playercards[cellId] !== null ? playercards[cellId].id : '';
           }
             card.textContent = cellValue;
-          
+            setCellColor(cellId, cellValue);
+
     //    }
-        
+
       });
       // Get the gameover message element.
       //const messageEl = this.rootElement.querySelector('.winner');
@@ -315,20 +347,40 @@ class TicTacToeClient {
         const playerId = parseInt(board.dataset.playerid);
         const cellValue = state.G.table[playerId].id;
    //     board.textContent = playerId !== null ? playerId : '';
-        
+
         board.textContent = cellValue !== null ? cellValue : '';
+        setCellColor(playerId + 8, cellValue);
       });
-      
+
       const bids = this.rootElement.querySelectorAll('.bid');
       // Update cells to display the values in game state.
       bids.forEach(bid => {
         const playerId = parseInt(bid.dataset.playerid);
         const cellValue = state.G.hand.bidding[playerId];
    //     board.textContent = playerId !== null ? playerId : '';
-        
+
         bid.textContent = cellValue !== null ? cellValue : '';
       });
-      
+
+      const gamescores = this.rootElement.querySelectorAll('.gamescore');
+      // Update cells to display the values in game state.
+      gamescores.forEach(gamescore => {
+        const teamId = parseInt(gamescore.dataset.teamid);
+        const cellValue = state.G.score[teamId];
+
+        gamescore.textContent = cellValue !== null ? cellValue : '';
+        setGameScoreColor(teamId + 12, cellValue);
+      });
+
+      const trickstaken = this.rootElement.querySelectorAll('.tricknumber');
+      // Update cells to display the values in game state.
+      trickstaken.forEach(tricknumber => {
+        const teamId = parseInt(tricknumber.dataset.teamid);
+        const cellValue = state.G.hand.score[teamId]/5;
+
+        tricknumber.textContent = cellValue !== null ? cellValue : '';
+      });
+
   /*    const kittycards = this.rootElement.querySelectorAll('.kittycard');
       // Update cells to display the values in game state.
       kittycards.forEach(kittycard => {
@@ -338,30 +390,30 @@ class TicTacToeClient {
           cellValue = state.G.secret.kitty[kittycardid].id;
         }*/
    //     board.textContent = playerId !== null ? playerId : '';
-        
+
   //      kittycard.textContent = cellValue !== null ? cellValue : '';
- //     }); 
-      
+ //     });
+
       const messageCurrentPlayer = this.rootElement.querySelector('.currentplayer');
       // Update the element to show a winner if any.
       messageCurrentPlayer.textContent = "The current player is player " + state.ctx.currentPlayer +
       " and the phase is " + state.ctx.phase + "."
-      
+
       const messagecurrentscore = this.rootElement.querySelector('.score');
       messagecurrentscore.textContent = "The score is " + state.G.score[0] + " to " + state.G.score[1]
-      
+
       const messagecurrentphase = this.rootElement.querySelector('.currentphase');
       messagecurrentphase.textContent = "The phase is " + state.ctx.phase
-      
+
       const messagedealer = this.rootElement.querySelector('.dealer');
-      messagedealer.textContent = "The dealer is player " + state.G.dealer + " ,the declarer is player " + state.G.hand.declarer + 
+      messagedealer.textContent = "The dealer is player " + state.G.dealer + " ,the declarer is player " + state.G.hand.declarer +
       " and the trump suit is " + state.G.hand.trumpsuit + ". The game score is " +
       state.G.score[0] + " to " + state.G.score[1] + ", and the hand score is " +
       state.G.hand.score[0] + " to " + state.G.hand.score[1] + "."
-      
+
       const messagetrump = this.rootElement.querySelector('.trumpsuit');
       messagetrump.textContent = "The trump suit is " + state.G.hand.trumpsuit
-      
+
       const statusmessage = this.rootElement.querySelector('.statusmessage');
       statusmessage.textContent = state.G.statusmessage
     }
@@ -385,6 +437,34 @@ class App {
     SplashScreen(rootElement).then(playerID => {
       this.client = new TicTacToeClient(rootElement, { playerID });
     });
+  }
+}
+
+// Global list of cards containing all red cards needed for appropriate coloring
+const redcards = ['A\u2661','K\u2661','Q\u2661','J\u2661','T\u2661','9\u2661']
+  + ['8\u2661','7\u2661','6\u2661','5\u2661','4\u2661','3\u2661','2\u2661']
+  + ['A\u2662','K\u2662','Q\u2662','J\u2662','T\u2662','9\u2662','8\u2662']
+  + ['7\u2662','6\u2662','5\u2662','4\u2662','3\u2662','2\u2662'];
+
+
+// Added new functions to change text color of card and gamescore elements
+function setCellColor(id, label) {
+  var myElement = document.getElementById(id);
+
+  if (redcards.includes(label) == true) {
+    myElement.style.color = 'red';
+  } else {
+    myElement.style.color = 'black'
+  }
+}
+
+function setGameScoreColor(id, score) {
+  var myElement = document.getElementById(id);
+
+  if (score < 0) {
+    myElement.style.color = 'red';
+  } else {
+    myElement.style.color = 'black'
   }
 }
 

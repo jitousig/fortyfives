@@ -102,7 +102,7 @@ function Bid(G, ctx,amount) {
         isPass(G.hand.bidding[1]) +
         isPass(G.hand.bidding[2]) +
         isPass(G.hand.bidding[3]) === 4) {
-      ctx.events.setPhase("bid")    
+      ctx.events.setPhase("bid")
         }
   ctx.events.endTurn()
 }
