@@ -43,7 +43,7 @@ class TicTacToeClient {
             for (let j = 0; j < 8; j++) {
               const cardid = j;
               const playerid = this.client.playerID
-              cards.push(`<td class="card" data-cardid="${cardid}" data-playerid="${playerid}" id="${cardid}"></td>`);  //added id as identifier for html elements/cells
+              cards.push(`<td class="card" data-cardid="${cardid}" data-playerid="${playerid}" id="${cardid}"></td>`);  //added id from 0 to 7 as identifier for html elements/cells
             }
             hand.push(`<tr>${cards.join('')}</tr>`);
       //    }
@@ -51,7 +51,7 @@ class TicTacToeClient {
           for (let i=0; i < 4; i++) {
             const playerid = i
             const boardspaceid = 8 + playerid;
-            board.push(`<td class="board" data-cardid="" data-playerid="${playerid}" id="${boardspaceid}"></td>`)
+            board.push(`<td class="board" data-cardid="" data-playerid="${playerid}" id="${boardspaceid}"></td>`)       //added boardspace id from 8 to 11 as identifier for html elements/cells
           }
 
           const bids = []
@@ -64,14 +64,14 @@ class TicTacToeClient {
           for (let i=0; i < 2; i++) {
             const teamid = i
             const boardspaceid = 12 + teamid;
-            gamescore.push(`<td class="gamescore" data-teamid="${teamid}" id="${boardspaceid}"></td>`)
+            gamescore.push(`<td class="gamescore" data-teamid="${teamid}" id="${boardspaceid}"></td>`)                  //added gamescore ids 12 and 13
           }
 
           const tricknumber = []
           for (let i=0; i < 2; i++) {
             const teamid = i
             const boardspaceid = 14 + teamid;
-            tricknumber.push(`<td class="tricknumber" data-teamid="${teamid}" id="${boardspaceid}"></td>`)
+            tricknumber.push(`<td class="tricknumber" data-teamid="${teamid}" id="${boardspaceid}"></td>`)              //added tricknumber ids 14 and 15
           }
 
    /*       const kitty = []
