@@ -14,7 +14,7 @@ import { PostgresStore } from "bgio-postgres";
 
 const db = new PostgresStore(process.env.DATABASE_URL);
 
-const server = Server({ games: [TicTacToe], db });
+const server = Server({ games: [TicTacToe] });
 const PORT = process.env.PORT || 8000;
 
 console.log("got to line 17")
