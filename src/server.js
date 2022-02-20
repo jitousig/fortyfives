@@ -12,7 +12,7 @@ import serve from 'koa-static';
 import { TicTacToe } from './Game.js';
 import { PostgresStore } from "bgio-postgres";
 
-//const db = new PostgresStore(process.env.DATABASE_URL);
+const db = new PostgresStore(process.env.DATABASE_URL);
 console.log(process.env.DATABASE_URL);
 
 const server = Server({ games: [TicTacToe] });
