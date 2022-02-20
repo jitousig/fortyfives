@@ -20,13 +20,13 @@ const db = new PostgresStore(
     dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false // <<<<<<< YOU NEED THIS
+      rejectUnauthorized: false // <<<<<<< YOU NEED THIS: https://stackoverflow.com/questions/58965011/sequelizeconnectionerror-self-signed-certificate
     }
   }
   }
 );
 
-const server = Server({ games: [TicTacToe] });
+const server = Server({ games: [TicTacToe], db });
 const PORT = process.env.PORT || 8000;
 
 console.log("got to line 17")
