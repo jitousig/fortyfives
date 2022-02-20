@@ -10,8 +10,11 @@ import { Server } from 'boardgame.io/server';
 import path from 'path';
 import serve from 'koa-static';
 import { TicTacToe } from './Game.js';
+import { PostgresStore } from "bgio-postgres";
 
-const server = Server({ games: [TicTacToe] });
+const db = new PostgresStore(process.env.DATABASE_URL);
+
+const server = Server({ games: [TicTacToe], db });
 const PORT = process.env.PORT || 8000;
 
 console.log("got to line 17")
