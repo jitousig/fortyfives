@@ -8,7 +8,8 @@
     "boardgame.io": "^0.42.0",
     "esm": "^3.2.25",
     "koa-static": "^5.0.0",
-    "pg": ""
+    "pg": "",
+    "bgio-postgres": ""
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
