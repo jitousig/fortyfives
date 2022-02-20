@@ -12,8 +12,19 @@ import serve from 'koa-static';
 import { TicTacToe } from './Game.js';
 import { PostgresStore } from "bgio-postgres";
 
-console.log(process.env.DATABASE_URL + "?sslmode=require");
-const db = new PostgresStore(process.env.DATABASE_URL + "?sslmode=require");
+console.log(process.env.DATABASE_URL);
+
+const db = new PostgresStore(
+  process.env.DATABASE_URL,
+  {
+    dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false // <<<<<<< YOU NEED THIS
+    }
+  }
+  }
+);
 
 const server = Server({ games: [TicTacToe] });
 const PORT = process.env.PORT || 8000;
