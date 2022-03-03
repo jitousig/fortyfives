@@ -47,17 +47,24 @@ class TicTacToeClient {
             }
             hand.push(`<tr>${cards.join('')}</tr>`);
       //    }
-          const board = []
-          for (let i=0; i < 4; i++) {
-            const playerid = i
-            const boardspaceid = 8 + playerid;
-            board.push(`<td class="board" data-cardid="" data-playerid="${playerid}" id="${boardspaceid}"></td>`)       //added boardspace id from 8 to 11 as identifier for html elements/cells
-          }
+          const board = []              //added boardspace id from 8 to 11 as identifier for html elements/cells
+
+            //design table based on 3x3 grid, player 0 on the left, 1 top, 2 right, 3 bottom
+            //added trumpsuit left of the table asid 16
+            board.push(`<tr><th>Trump</th><td width="30px"></td><td></td><td class="board" data-cardid="" data-playerid="${1}" id="${9}"></td><td></td></tr>`)
+            board.push(`<tr><td class="trumpsuit" id="${16}"></td><td></td><td class="board" data-cardid="" data-playerid="${0}" id="${8}"></td><td></td><td class="board" data-cardid="" data-playerid="${2}" id="${10}"></td></tr>`)
+            board.push(`<tr><td></td><td></td><td></td><td class="board" data-cardid="" data-playerid="${3}" id="${11}"></td><td></td></tr>`)
 
           const bids = []
           for (let i=0; i < 4; i++) {
             const playerid = i
             bids.push(`<td class="bid" data-playerid="${playerid}"></td>`)
+          }
+
+          const numberdiscarded = []
+          for (let i=0; i < 4; i++) {
+            const playerid = i
+            numberdiscarded.push(`<td class="numberdiscarded" data-playerid="${playerid}"></td>`)
           }
 
           const gamescore = []
@@ -73,6 +80,9 @@ class TicTacToeClient {
             const boardspaceid = 14 + teamid;
             tricknumber.push(`<td class="tricknumber" data-teamid="${teamid}" id="${boardspaceid}"></td>`)              //added tricknumber ids 14 and 15
           }
+
+
+
 
    /*       const kitty = []
           for (let i=0; i < 3; i++) {
@@ -94,7 +104,7 @@ class TicTacToeClient {
         <p class="currentplayer"></p>
 
 <form id="biddingform">
-  <p>Please select your bid:</p>
+  <p class="small">Please select your bid:</p>
   <div>
     <input type="radio" id="bidChoice1"
            name="bid" value="pass">
@@ -111,15 +121,15 @@ class TicTacToeClient {
         <input type="radio" id="bidChoice5"
            name="bid" value="hold">
     <label for="bidChoice5">Hold</label>
-  </div>
-  <div>
     <button type="submit">Submit</button>
   </div>
 </form>
         <table>${bids.join('')}</table>
+        <p class="small">Number of cards drawn</p>
+        <table>${numberdiscarded.join('')}</table>
 
-                <form id="declarationform">
-  <p>Please select the trump suit:</p>
+<form id="declarationform">
+  <p class="small">Please select the trump suit:</p>
   <div>
     <input type="radio" id="suitChoice1"
            name="suit" value="Diamonds">
@@ -133,8 +143,6 @@ class TicTacToeClient {
     <input type="radio" id="suitChoice4"
            name="suit" value="Clubs">
     <label for="bidChoice4">Clubs</label>
-  </div>
-  <div>
     <button type="submit">Submit</button>
   </div>
 </form>
@@ -147,6 +155,8 @@ class TicTacToeClient {
         <button type="button" id="DiscardBtn">Discard</button>
         <button type="button" id="ScoreTrick">Score Trick</button>
         <button type="button" id="ScoreHand">Score Hand</button>
+
+        <p class="small"></p>
         <table>${board.join('')}</table>
 
         <p hidden class="score"></p>
@@ -166,6 +176,9 @@ class TicTacToeClient {
           </tr>
           </tbody>
         </table>
+
+
+
       `;
       var messagediscards = this.rootElement.querySelector('.discards');
       messagediscards.textContent = "Cards to discard:"
@@ -381,6 +394,24 @@ class TicTacToeClient {
         tricknumber.textContent = cellValue !== null ? cellValue : '';
       });
 
+      const numbersdiscarded = this.rootElement.querySelectorAll('.numberdiscarded');
+      // Update cells to display the values in game state.
+      numbersdiscarded.forEach(numberdiscarded => {
+        const playerId = parseInt(numberdiscarded.dataset.playerid);
+        const cellValue = state.G.hand.amountdiscarded[playerId];
+
+        numberdiscarded.textContent = cellValue !== null ? cellValue : '';
+      });
+
+      const currenttrump = this.rootElement.querySelectorAll('.trumpsuit');
+      // Update cells to display the values in game state.
+      currenttrump.forEach(trumpsuit => {
+        const cellValue = suitTextToSymbol(state.G.hand.trumpsuit);
+
+        trumpsuit.textContent = cellValue !== null ? cellValue : '';
+        setTrumpSuitColor(16, cellValue);
+      });
+
   /*    const kittycards = this.rootElement.querySelectorAll('.kittycard');
       // Update cells to display the values in game state.
       kittycards.forEach(kittycard => {
@@ -441,13 +472,15 @@ class App {
 }
 
 // Global list of cards containing all red cards needed for appropriate coloring
-const redcards = ['A\u2661','K\u2661','Q\u2661','J\u2661','T\u2661','9\u2661']
-  + ['8\u2661','7\u2661','6\u2661','5\u2661','4\u2661','3\u2661','2\u2661']
-  + ['A\u2662','K\u2662','Q\u2662','J\u2662','T\u2662','9\u2662','8\u2662']
-  + ['7\u2662','6\u2662','5\u2662','4\u2662','3\u2662','2\u2662'];
+const redcards = ['A\u2665','K\u2665','Q\u2665','J\u2665','T\u2665','9\u2665']
+  + ['8\u2665','7\u2665','6\u2665','5\u2665','4\u2665','3\u2665','2\u2665']
+  + ['A\u2666','K\u2666','Q\u2666','J\u2666','T\u2666','9\u2666','8\u2666']
+  + ['7\u2666','6\u2666','5\u2666','4\u2666','3\u2666','2\u2666'];
 
+// Global list of red suits needed for appropriate coloring
+const redsuits = ['\u2665','\u2666'];
 
-// Added new functions to change text color of card and gamescore elements
+// Added new functions to change text color of card, gamescore and trumpsuit elements
 function setCellColor(id, label) {
   var myElement = document.getElementById(id);
 
@@ -466,6 +499,36 @@ function setGameScoreColor(id, score) {
   } else {
     myElement.style.color = 'black'
   }
+}
+
+function setTrumpSuitColor(id, label) {
+  var myElement = document.getElementById(id);
+
+  if (redsuits.includes(label) == true) {
+    myElement.style.color = 'red';
+  } else {
+    myElement.style.color = 'black'
+  }
+}
+
+// Added function that converts suit name into symbol
+function suitTextToSymbol(suittext) {
+
+  if (suittext == 'Hearts') {
+    return '\u2665';
+  } else {
+    if (suittext == 'Diamonds') {
+      return '\u2666';
+    } else {
+      if (suittext == 'Spades') {
+        return '\u2660';
+      } else {
+          if (suittext == 'Clubs') {
+            return '\u2663';
+          }
+        }
+      }
+    }
 }
 
 const appElement = document.getElementById('app');

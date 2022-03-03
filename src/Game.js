@@ -189,7 +189,7 @@ function scoreHand(G, ctx) {
 
 function playCard(G, ctx, id) {
   const istrump = (card) => {
-    if (card.suit === G.hand.trumpsuit || card.id === "A\u2661") {
+    if (card.suit === G.hand.trumpsuit || card.id === "A\u2665") {
       return true
     } else {return false}
   }
@@ -250,6 +250,11 @@ function playCard(G, ctx, id) {
     G.trick.suitled = cardToPlay.suit
     G.trick.trumpled = istrump(cardToPlay)
     if (G.trick.trumpled) {G.trick.ranktrumpled = cardToPlay.ranktrump}
+
+    //hide number of cards drawn after first card is played
+    for (let i = 0; i < 4; i++) {
+      G.hand.amountdiscarded[i] = ""
+    }
   }
 
   G.trick.cards_played++;
@@ -371,6 +376,7 @@ function discard(G, ctx, cardsToDiscard){
  } else {
    numcards = l
  }
+ G.hand.amountdiscarded[p] = parseInt(numcards)
  G.statusmessage = "Player " + p + " drew " + numcards + " cards."
     ctx.events.endTurn()
 }
@@ -385,32 +391,32 @@ G.trick.northsouthscore = 5;
 }; */
 
 const std_45s_deck = [
-  { id: 'A\u2661', ranktrump: 3, suit: "Trump"},
-  { id: 'K\u2661', ranktrump: 4, ranknontrump: 1, suit: "Hearts"},
-  { id: 'Q\u2661', ranktrump: 5, ranknontrump: 2, suit: "Hearts"},
-  { id: 'J\u2661', ranktrump: 2, ranknontrump: 3, suit: "Hearts"},
-  { id: 'T\u2661', ranktrump: 6, ranknontrump: 4, suit: "Hearts"},
-  { id: '9\u2661', ranktrump: 7, ranknontrump: 5, suit: "Hearts"},
-  { id: '8\u2661', ranktrump: 8, ranknontrump: 6, suit: "Hearts"},
-  { id: '7\u2661', ranktrump: 9, ranknontrump: 7, suit: "Hearts"},
-  { id: '6\u2661', ranktrump: 10, ranknontrump: 8, suit: "Hearts"},
-  { id: '5\u2661', ranktrump: 1, ranknontrump: 9, suit: "Hearts"},
-  { id: '4\u2661', ranktrump: 11, ranknontrump: 10, suit: "Hearts"},
-  { id: '3\u2661', ranktrump: 12, ranknontrump: 11, suit: "Hearts"},
-  { id: '2\u2661', ranktrump: 13, ranknontrump: 12, suit: "Hearts"},
-  { id: 'A\u2662', ranktrump: 4, ranknontrump: 13, suit: "Diamonds"},
-  { id: 'K\u2662', ranktrump: 5, ranknontrump: 1, suit: "Diamonds"},
-  { id: 'Q\u2662', ranktrump: 6, ranknontrump: 2, suit: "Diamonds"},
-  { id: 'J\u2662', ranktrump: 2, ranknontrump: 3, suit: "Diamonds"},
-  { id: 'T\u2662', ranktrump: 7, ranknontrump: 4, suit: "Diamonds"},
-  { id: '9\u2662', ranktrump: 8, ranknontrump: 5, suit: "Diamonds"},
-  { id: '8\u2662', ranktrump: 9, ranknontrump: 6, suit: "Diamonds"},
-  { id: '7\u2662', ranktrump: 10, ranknontrump: 7, suit: "Diamonds"},
-  { id: '6\u2662', ranktrump: 11, ranknontrump: 8, suit: "Diamonds"},
-  { id: '5\u2662', ranktrump: 1, ranknontrump: 9, suit: "Diamonds"},
-  { id: '4\u2662', ranktrump: 12, ranknontrump: 10, suit: "Diamonds"},
-  { id: '3\u2662', ranktrump: 13, ranknontrump: 11, suit: "Diamonds"},
-  { id: '2\u2662', ranktrump: 14, ranknontrump: 12, suit: "Diamonds"},
+  { id: 'A\u2665', ranktrump: 3, suit: "Trump"},
+  { id: 'K\u2665', ranktrump: 4, ranknontrump: 1, suit: "Hearts"},
+  { id: 'Q\u2665', ranktrump: 5, ranknontrump: 2, suit: "Hearts"},
+  { id: 'J\u2665', ranktrump: 2, ranknontrump: 3, suit: "Hearts"},
+  { id: 'T\u2665', ranktrump: 6, ranknontrump: 4, suit: "Hearts"},
+  { id: '9\u2665', ranktrump: 7, ranknontrump: 5, suit: "Hearts"},
+  { id: '8\u2665', ranktrump: 8, ranknontrump: 6, suit: "Hearts"},
+  { id: '7\u2665', ranktrump: 9, ranknontrump: 7, suit: "Hearts"},
+  { id: '6\u2665', ranktrump: 10, ranknontrump: 8, suit: "Hearts"},
+  { id: '5\u2665', ranktrump: 1, ranknontrump: 9, suit: "Hearts"},
+  { id: '4\u2665', ranktrump: 11, ranknontrump: 10, suit: "Hearts"},
+  { id: '3\u2665', ranktrump: 12, ranknontrump: 11, suit: "Hearts"},
+  { id: '2\u2665', ranktrump: 13, ranknontrump: 12, suit: "Hearts"},
+  { id: 'A\u2666', ranktrump: 4, ranknontrump: 13, suit: "Diamonds"},
+  { id: 'K\u2666', ranktrump: 5, ranknontrump: 1, suit: "Diamonds"},
+  { id: 'Q\u2666', ranktrump: 6, ranknontrump: 2, suit: "Diamonds"},
+  { id: 'J\u2666', ranktrump: 2, ranknontrump: 3, suit: "Diamonds"},
+  { id: 'T\u2666', ranktrump: 7, ranknontrump: 4, suit: "Diamonds"},
+  { id: '9\u2666', ranktrump: 8, ranknontrump: 5, suit: "Diamonds"},
+  { id: '8\u2666', ranktrump: 9, ranknontrump: 6, suit: "Diamonds"},
+  { id: '7\u2666', ranktrump: 10, ranknontrump: 7, suit: "Diamonds"},
+  { id: '6\u2666', ranktrump: 11, ranknontrump: 8, suit: "Diamonds"},
+  { id: '5\u2666', ranktrump: 1, ranknontrump: 9, suit: "Diamonds"},
+  { id: '4\u2666', ranktrump: 12, ranknontrump: 10, suit: "Diamonds"},
+  { id: '3\u2666', ranktrump: 13, ranknontrump: 11, suit: "Diamonds"},
+  { id: '2\u2666', ranktrump: 14, ranknontrump: 12, suit: "Diamonds"},
   { id: 'A\u2660', ranktrump: 4, ranknontrump: 4, suit: "Spades"},
   { id: 'K\u2660', ranktrump: 5, ranknontrump: 1, suit: "Spades"},
   { id: 'Q\u2660', ranktrump: 6, ranknontrump: 2, suit: "Spades"},
@@ -540,6 +546,12 @@ export const TicTacToe = {
         2: [],
         3: []
       },
+        amountdiscarded: {
+        0: "",
+        1: "",
+        2: "",
+        3: 0
+        },
         declarer: "TBD",
         declaringpartnership: [],
         defendingpartnership: [],
@@ -592,6 +604,12 @@ export const TicTacToe = {
         1: [],
         2: [],
         3: []
+      },
+        amountdiscarded: {
+        0: "",
+        1: "",
+        2: "",
+        3: ""
       },
         declarer: "TBD",
         declaringpartnership: [],
@@ -716,6 +734,7 @@ export const TicTacToe = {
 
     play: {
       //start: true,
+
       moves: { playCard },
       next: 'trickscoring',
       turn: {
