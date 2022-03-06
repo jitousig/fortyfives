@@ -41,7 +41,7 @@ export const MoveValidate = {
       return result(false, "That isn't a card in your hand!");}
 
     const istrump = (card) => {
-  if (card.suit === G.hand.trumpsuit || card.id === "A\u2661") {
+  if (card.suit === G.hand.trumpsuit || card.id === "A\u2665") {
     return true
   } else {return false}
 }
